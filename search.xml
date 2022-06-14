@@ -56,4 +56,817 @@
         <tag>动态规划, C++, 算法, 经典问题</tag>
       </tags>
   </entry>
+  <entry>
+    <title>【动态规划】背包问题</title>
+    <url>/2022/06/14/%E3%80%90%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E3%80%91%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h3 id="导读">导读</h3>
+<p>背包问题是动态规划中非常经典的一类问题，需要仔细地思考背包问题的每一个状态转移方程。</p>
+<p>背包问题大致有以下几大类：</p>
+<ul>
+<li>01背包问题</li>
+<li>完全背包问题</li>
+<li>多重背包问题</li>
+<li>混合背包问题</li>
+<li>二位费用的背包问题</li>
+<li>分组背包问题</li>
+<li>背包问题求方案数</li>
+<li>求背包问题的方案</li>
+<li>有依赖的背包问题</li>
+</ul>
+<p>下面开始讨论背包问题的这些子问题：</p>
+<p>*本文不会讨论后面三种子问题！</p>
+<h3 id="背包问题">01背包问题</h3>
+<h4 id="模板">模板</h4>
+<p>有 <span class="math inline">\(N\)</span> 件物品和一个容量是 <span
+class="math inline">\(V\)</span> 的背包。每件物品只能使用一次。第 <span
+class="math inline">\(i\)</span> 件物品的体积是 <span
+class="math inline">\(v[i]\)</span>，价值是 <span
+class="math inline">\(w[i]\)</span>。</p>
+<p>求解将哪些物品装入背包，可使这些物品的总体积不超过背包容量，且总价值最大。</p>
+<h4 id="解法分析">解法分析</h4>
+<p>这是背包问题中最简单的一种子问题。其特点是:
+<strong>每种物品仅有一件，可以选择放或不放</strong>。</p>
+<p>我们首先确定状态：<span class="math inline">\(f[i][j]\)</span> 表示前
+<span class="math inline">\(i\)</span> 个物品在背包容量 <span
+class="math inline">\(j\)</span>
+的情况下能获得的最大价值。则其状态转移方程便是：<span
+class="math inline">\(f[i][j]=std::max(f[i-1][j],
+f[i-1][j-v[i]]+w[i])\)</span></p>
+<p>这个方程非常重要，几乎所有的跟背包问题相关的问题的方程都是由它衍生出来的。希望读者能够<strong>完全</strong>理解它。</p>
+<p>这里由于篇幅有限<del>（其实就是懒）</del>，给读者提供一个视频链接。这个老师讲的非常清楚。<a
+href="https://www.bilibili.com/video/BV1K4411X766">bilibili@codereasy
+背包问题</a></p>
+<p>本文将在上面的视频的基础上优化空间复杂度。</p>
+<p>以上算法的时间复杂度为<span
+class="math inline">\(O(N*V)\)</span>，空间复杂度也是<span
+class="math inline">\(O(N*V)\)</span>。其中，时间复杂度已经基本不能再优化了，但是空间复杂度可以继续优化到<span
+class="math inline">\(O(V)\)</span>。</p>
+<p>在每一次第二维的循环中，<span class="math inline">\(f[i][j]\)</span>
+是均由 <span class="math inline">\(i-1\)</span> 的状态得来的。<span
+class="math inline">\(f[i][j]\)</span> 与 <span
+class="math inline">\(f[i-1][j]\)</span>
+是相互独立的。因此，我们可以考虑将 <span
+class="math inline">\(i\)</span>
+这一维舍去。需要注意的是，舍弃掉第一维后，我们必须采用<strong>倒序循环</strong>的方式。如果仍然使用正序循环，那么就是从
+<span class="math inline">\(f[较小体积]\)</span> 更新到 <span
+class="math inline">\(f[较大体积]\)</span>。当循环到较大体积时，可能用的是第
+<span class="math inline">\(i\)</span> 轮的状态而不是第 <span
+class="math inline">\(i-1\)</span> 轮的状态。</p>
+<p>举个例子：当我们对一个体积为 <span class="math inline">\(8\)</span>
+的物体进行决策时，<span class="math inline">\(f[19]\)</span> 应该由
+<span class="math inline">\(f[11]\)</span> 更新得到。但此时的 <span
+class="math inline">\(f[11]\)</span> 却不是第 <span
+class="math inline">\(i-1\)</span> 轮的 <span
+class="math inline">\(f[11]\)</span> ，而是这一轮刚刚更新过的 <span
+class="math inline">\(f[11]\)</span> 。说的通俗一点，即 <span
+class="math inline">\(f[11]\)</span>
+已经被污染了。而如果使用逆序循环，则不会有这样的问题。</p>
+<p>最后，我们的状态转移方程就顺水推舟地写出来了：<span
+class="math inline">\(f[j]=f[j-v[i]]+w[i]\)</span></p>
+<p>代码：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">39</span>, M = <span class="number">209</span>;</span><br><span class="line"><span class="type">int</span> m, n;</span><br><span class="line"><span class="type">int</span> w[N], c[N], f[M];</span><br><span class="line"><span class="comment">// f[j] 表示 N 件物品，背包容量 j 下的最优解</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d%d&quot;</span>, &amp;m, &amp;n);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%d%d&quot;</span>, w + i, c + i);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = m; j &gt;= w[i]; j--)</span><br><span class="line">            f[j] = std::<span class="built_in">max</span>(f[j], f[j-w[i]] + c[i]);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, f[m]);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>例题：<a href="https://www.luogu.com.cn/problem/P1048">[NOIP2005
+普及组] 采药</a></p>
+<h3 id="完全背包问题">完全背包问题</h3>
+<h4 id="模板-1">模板</h4>
+<p>有 <span class="math inline">\(N\)</span> 种物品和一个容量是 <span
+class="math inline">\(V\)</span> 的背包，每种物品都有无限件可用。第
+<span class="math inline">\(i\)</span> 种物品的体积是 <span
+class="math inline">\(v[i]\)</span>，价值是 <span
+class="math inline">\(w[i]\)</span>。</p>
+<p>求解将哪些物品装入背包，可使这些物品的总体积不超过背包容量，且总价值最大。</p>
+<h4 id="解法分析-1">解法分析</h4>
+<p>完全背包的状态转移方程可以由01背包的状态转移方程演变而来，即<span
+class="math inline">\(f[i,j]=max\{f[i-1,j],f[i-1,j-v]+w,f[i-1,j-2*v]+2*w,f[i-1,j-3*v]+3*w,...\}\)</span>
+其中，<span class="math inline">\(j&gt;=k*v\)</span></p>
+<p>代码：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">1010</span>;</span><br><span class="line"><span class="type">int</span> n, m, f[N][N], v[N], w[N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d%d&quot;</span>, &amp;n, &amp;m);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">		<span class="built_in">scanf</span>(<span class="string">&quot;%d%d&quot;</span>, v + i, w + i);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j &lt;= m; j++)</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> k = <span class="number">0</span>; k*v[i] &lt;= j; k++)</span><br><span class="line">                f[i][j] = std::<span class="built_in">max</span>(f[i][j], f[i<span class="number">-1</span>][j-k*v[i]] + k*w[i]);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, f[n][m]);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样的代码可能会 TLE, 所以我们得想办法优化。</p>
+<p>我们将两个方程放在一起看：</p>
+<p><span
+class="math inline">\(f[i,j]=max\{f[i-1,j],f[i-1,j-v]+w,f[i-1,j-2*v]+2*w,f[i-1,j-3*v]+3*w,...\}\)</span></p>
+<p><span class="math inline">\(f[i , j-v]= max\{\qquad \ \ f[i-1,j-v] ,
+f[i-1,j-2*v] + w , f[i-1,j-3*v]+2*w, ...\}\)</span></p>
+<p>将两方程整理后得到：$f[i][j]=max(f[i,j-v]+w,f[i-1][j]) $</p>
+<p>那么，代码就可以优化成这样：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">1010</span>;</span><br><span class="line"><span class="type">int</span> n, m, f[N][N], v[N], w[N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d%d&quot;</span>, &amp;n, &amp;m);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">		<span class="built_in">scanf</span>(<span class="string">&quot;%d%d&quot;</span>, v + i, w + i);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt;= m; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            f[i][j] = f[i<span class="number">-1</span>][j];</span><br><span class="line">            <span class="keyword">if</span>(j - v[i] &gt;= <span class="number">0</span>)</span><br><span class="line">                f[i][j]=<span class="built_in">max</span>(f[i][j], f[i][j-v[i]]+w[i]);</span><br><span class="line">        &#125;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, f[n][m]);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>与01背包一样，我们可以将空间复杂度优化成 <span
+class="math inline">\(O(V)\)</span></p>
+<p>最终代码：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">209</span>;</span><br><span class="line"><span class="type">int</span> m, n, f[N], w[N], c[N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">&quot;%d%d&quot;</span>, &amp;m, &amp;n);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%d%d&quot;</span>, w + i, c + i);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = w[i]; j &lt;= m; j++)</span><br><span class="line">            f[j] = std::<span class="built_in">max</span>(f[j], f[j-w[i]] + c[i]);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, f[m]);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>例题：<a
+href="https://www.luogu.com.cn/problem/P2563">[AHOI2001]质数和分解</a></p>
+<h3 id="多重背包">多重背包</h3>
+<h4 id="模板-2">模板</h4>
+<p>有 <span class="math inline">\(N\)</span> 种物品和一个容量是 <span
+class="math inline">\(V\)</span> 的背包。第 <span
+class="math inline">\(i\)</span> 种物品最多有 <span
+class="math inline">\(s[i]\)</span> 件，每件体积是 <span
+class="math inline">\(v[i]\)</span>，价值是 <span
+class="math inline">\(w[i]\)</span>。</p>
+<p>求解将哪些物品装入背包，可使物品体积总和不超过背包容量，且价值总和最大。</p>
+<h4 id="解法分析-2">解法分析</h4>
+<p>第一种：朴素解法</p>
+<p>代码好理解，就不做解释了。只要掌握了01背包的状态转移方程，这个代码问题不大。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">509</span>;</span><br><span class="line"><span class="type">int</span> n, m, f[N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d%d&quot;</span>, &amp;n, &amp;m);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span> s, v, w;</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%d%d%d&quot;</span>, &amp;s, &amp;v, &amp;w);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = m; j &gt;= v; j--)</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> k = <span class="number">0</span>; k&lt;=s <span class="keyword">and</span> j&gt;=k*v; k++)</span><br><span class="line">                f[j] = std::<span class="built_in">max</span>(f[j], f[j-k*v] + k*w);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, f[m]);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注：这个代码是后来写的，将 s, v, w 数组改成了变量，应该能够看懂。</p>
+<p>这个代码时间复杂度较高（<span
+class="math inline">\(O(V*\Sigma^N_{i=1}C_i)\)</span>），当数据较小时，该代码可以通过。但是，当数据很大时，这个代码就一定会
+TLE。</p>
+<p>所以，我们考虑改善时间复杂度。应当使用<strong>二进制拆分法</strong>来将多重背包转换成01背包，再求解，速度将大幅提高。</p>
+<p>二进制拆分法的原理：从 <span
+class="math inline">\(2^0,2^1,2^2,...,2^{k-1}\)</span> 这 <span
+class="math inline">\(k\)</span> 个 <span
+class="math inline">\(2\)</span> 的整数次幂中选出若干个相加，可以表示出
+<span class="math inline">\(0\sim 2^k-1\)</span> 之间任何一个整数。</p>
+<p>例如：<span class="math inline">\(1，2，4\)</span>可以表示 <span
+class="math inline">\(1\)</span> 至 <span
+class="math inline">\(7\)</span> 内所有的正整数。即 <span
+class="math display">\[
+1=1\\
+2=2\\
+3=1+2\\
+4=4\\
+5=1+4\\
+6=2+4\\
+7=1+2+4
+\]</span> 按照这个思路，我们可以把数量为 <span
+class="math inline">\(c[i]\)</span> 的第 <span
+class="math inline">\(i\)</span>
+种物品拆成若干个由二进制数组成的物品数量。例如，有一种物品有 <span
+class="math inline">\(10\)</span> 个，每个物品的价值为 <span
+class="math inline">\(100\)</span>，体积为 <span
+class="math inline">\(20\)</span>。那么，我们就要存：</p>
+<p>第一轮：<span class="math inline">\(w[++counter]=1*100,\
+v[counter]=1*20\)</span></p>
+<p>第二轮：<span class="math inline">\(w[++counter]=2*100,\
+v[counter]=2*20\)</span></p>
+<p>第三轮：<span class="math inline">\(w[++counter]=4*100,\
+v[counter]=4*20\)</span></p>
+<p>第四轮：<span class="math inline">\(w[++counter]=3*100,\
+v[counter]=3*20\)</span></p>
+<p>这样，我们就把多重背包问题转化成了01背包问题，时间复杂度 <span
+class="math inline">\(O(log\ C_i)\)</span>。</p>
+<p>如果你看懂了，那么就请挑战一下自己写出来这个代码吧！</p>
+<p>但如果你实在不会写，我提供一个参考代码。但还是希望你能够自己先尝试一下！</p>
+<details>
+<summary>
+多重背包
+</summary>
+<pre><code>#include &lt;iostream&gt;
+    const int N = 509, M = 26009;
+    int n, nn, m, f[N], v[M], w[M];
+    int main()
+    &#123;
+        scanf("%d%d", &n, &m);
+        for (int i = 1, s, x, y; i <= n; i++)
+        &#123;
+            int t = 1;
+            scanf("%d%d%d", &s, &x, &y);
+            while (s >= t)
+            &#123;
+                v[++nn] = t * x, w[nn] = t * y;
+                s -= t, t <<= 1;
+            &#125;
+            if (s) &#123; v[++nn] = s * x, w[nn] = s * y; &#125;
+        &#125;
+        for (int i = 1; i <= nn; i++)
+            for (int j = m; j >= v[i]; j--)
+                f[j] = std::max(f[j], f[j-v[i]] + w[i]);
+        printf("%d", f[m]);
+        return 0;
+    &#125;</code></pre>
+</details>
+<h3 id="混合背包">混合背包</h3>
+<p>混合背包即将上述的三种最基础的背包问题体型放在一种问题里。先来看模板题。</p>
+<h4 id="模板-3">模板</h4>
+<p>有 <span class="math inline">\(N\)</span> 种物品和一个容量是 <span
+class="math inline">\(V\)</span> 的背包。</p>
+<p>物品一共有三类：</p>
+<ul>
+<li>第一类物品只能用1次（01背包）；</li>
+<li>第二类物品可以用无限次（完全背包）；</li>
+<li>第三类物品最多只能用 <span class="math inline">\(s[i]\)</span>
+次（多重背包）；</li>
+</ul>
+<p>每种体积是 <span class="math inline">\(v[i]\)</span>，价值是 <span
+class="math inline">\(w[i]\)</span>。求解将哪些物品装入背包，可使物品体积总和不超过背包容量，且价值总和最大。</p>
+<h4 id="解法分析-3">解法分析</h4>
+<p>当该物品有无限个时，则按照完全背包的解法来处理；</p>
+<p>当该物品有有限个时，则按照多重背包或者01背包的解法来处理。</p>
+<p>代码：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">209</span>;</span><br><span class="line"><span class="type">int</span> v, n, f[N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d%d&quot;</span>, &amp;v, &amp;n);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>, w, c, p; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%d%d%d&quot;</span>, &amp;w, &amp;c, &amp;p);</span><br><span class="line">        <span class="keyword">if</span> (p == <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> j = w; j &lt;= v; j++)</span><br><span class="line">                f[j] = std::<span class="built_in">max</span>(f[j], f[j-w] + c);</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> k = <span class="number">1</span>; k &lt;= p; k++)</span><br><span class="line">                <span class="keyword">for</span> (<span class="type">int</span> j = v; j &gt;= w; j--)</span><br><span class="line">                    f[j] = std::<span class="built_in">max</span>(f[j], f[j-w] + c);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, f[v]);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="二维费用的背包问题">二维费用的背包问题</h3>
+<h4 id="模板-4">模板</h4>
+<p>有 <span class="math inline">\(N\)</span> 件物品和一个容量是 <span
+class="math inline">\(V\)</span> 的背包，背包能承受的最大重量是 <span
+class="math inline">\(M\)</span>。</p>
+<p>每件物品只能用一次。体积是 <span
+class="math inline">\(v_i\)</span>，重量是 <span
+class="math inline">\(m_i\)</span>，价值是 <span
+class="math inline">\(w_i\)</span>。</p>
+<p>求解将哪些物品装入背包，可使物品总体积不超过背包容量，总重量不超过背包可承受的最大重量，且价值总和最大。</p>
+<h4 id="解法分析-4">解法分析</h4>
+<p>这种题与前三种常规背包问题几乎相同，只是多了一个限定条件而已。</p>
+<p>回顾一维费用的背包问题，状态准是：<span
+class="math inline">\(f[j]\)</span> 表示在背包容量为 <span
+class="math inline">\(j\)</span> 的情况下能获得的最大价值</p>
+<p>此时，多了一个限定条件，那么我们就自然想到多增一维，即：<span
+class="math inline">\(f[j][k]\)</span> 表示在第一个限制条件为 <span
+class="math inline">\(j\)</span> ，第二个限制条件为 <span
+class="math inline">\(k\)</span> 的情况下能获得的最大价值</p>
+<p>同样类比一维费用的背包问题的状态转移方程，二维的状态转移方程应该这么写：
+<span class="math display">\[
+f_{j, k} = max(f_{j − v_i,\ k − m_i},\ f_{j,\ k})
+\]</span> 状态转移方程出来了，那么写代码也就轻松了。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">400</span>;</span><br><span class="line"><span class="type">int</span> g, v, n, f[N][N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d%d%d&quot;</span>, &amp;g, &amp;v, &amp;n);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>, value, w1, w2; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%d%d%d&quot;</span>, &amp;value, &amp;w1, &amp;w2);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = g; j &gt;= w1; j--)</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> l = v; l &gt;= w2; l--)</span><br><span class="line">                f[j][l] = std::<span class="built_in">max</span>(f[j][l], f[j - w1][l - w2] + value);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, f[g][v]);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="分组背包">分组背包</h3>
+<h4 id="模板-5">模板</h4>
+<p>有 <span class="math inline">\(N\)</span> 组物品和一个容量是 <span
+class="math inline">\(V\)</span> 的背包。</p>
+<p>每组物品有若干个，同一组内的物品最多只能选一个。每件物品的体积是
+<span class="math inline">\(v_{i,j}\)</span>，价值是 <span
+class="math inline">\(w_{i,j}\)</span>，其中 <span
+class="math inline">\(i\)</span> 是组号，<span
+class="math inline">\(j\)</span>
+是组内编号。求解将哪些物品装入背包，可使物品总体积不超过背包容量，且总价值最大。</p>
+<h4 id="解法分析-5">解法分析</h4>
+<p>这个问题变成了每组物品有若干个策略：是选择本组的某一件，还是不选。</p>
+<p>状态转移方程：<span class="math inline">\(f[k][v]=max\{f[k-1][v],\
+f[k-1][v-w[i]]+c[i]\bigg| 物品i\in 第k组 \}\)</span></p>
+<p>代码：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">39</span>, M = <span class="number">209</span>;</span><br><span class="line"><span class="type">int</span> v, n, t;</span><br><span class="line"><span class="type">int</span> w[N], c[N], a[<span class="number">11</span>][N], f[M];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d%d%d&quot;</span>, &amp;v, &amp;n, &amp;t);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>, p; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%d%d%d&quot;</span>, w + i, c + i, &amp;p);</span><br><span class="line">        a[p][++a[p][<span class="number">0</span>]] = i; <span class="comment">// a[p][0] is the number of items in group p</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> k = <span class="number">1</span>; k &lt;= t; k++)</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = v; j &gt;= <span class="number">0</span>; j--)</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= a[k][<span class="number">0</span>]; i++)</span><br><span class="line">                <span class="keyword">if</span> (j&gt;=w[a[k][i]] <span class="keyword">and</span> f[j]&lt;f[j-w[a[k][i]]]+c[a[k][i]])</span><br><span class="line">                    f[j] = f[j-w[a[k][i]]] + c[a[k][i]];</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, f[v]);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>### 结束语</p>
+<p>上文不可能涵盖背包问题的所有问法。但只要完全领会并掌握背包问题解题时的思路，遇到背包问题的变形题时，只要难度不超纲，应该可以想出解法。</p>
+<p>希望读者不仅仅只看代码，也要深刻理解思路，这样才能真正掌握背包问题这个重要的算法，为将来学习更深层次的
+DP 打下良好的基础。</p>
+<h3 id="秘笈">秘笈</h3>
+<ul>
+<li><span class="math inline">\(f\)</span>
+数组的大小一定由<strong>限制条件</strong>的大小决定</li>
+<li>循环处理背包问题时，第一层循环永远一一是<strong>枚举物品个数或组别</strong>（重要）</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> f[N]; <span class="comment">// N 为价值或重量(即限定条件)的最大值</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ...;</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= %物品个数或组数%; i++)</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = %背包容量或价值最大值%; j &gt;= %第i件物品的价值或体积%; j--) <span class="comment">// 这一行不绝对，可能会正序循环或者其他。</span></span><br><span class="line">            f[j] = std::<span class="built_in">max</span>(f[j], f[j-w[i]] + c[i]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>动态规划, C++, 算法, 经典问题</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【动态规划】经典DP问题</title>
+    <url>/2022/06/14/%E3%80%90%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E3%80%91%E7%BB%8F%E5%85%B8DP%E9%97%AE%E9%A2%98(%E4%B8%8A)/</url>
+    <content><![CDATA[<h3 id="对抗赛compete">1. 对抗赛(compete)</h3>
+<h4 id="题目描述">题目描述</h4>
+<p>程序设计对抗赛设有 <span class="math inline">\(N\)</span>(<span
+class="math inline">\(0\lt N\lt 50\)</span>的整数)
+个价值互不相同的奖品，每个奖品的价值分别为 <span
+class="math inline">\(S_1，S_2，S_3\dots S_n\)</span>(均为不超过 <span
+class="math inline">\(100\)</span>
+的正整数)。现将它们分给甲乙两队，为了使得甲乙两队得到相同价值的奖品，必须将这
+<span class="math inline">\(N\)</span> 个奖品分成总价值相等的两组。</p>
+<p>编程要求：对给定 <span class="math inline">\(N\)</span> 及 <span
+class="math inline">\(N\)</span> 个奖品的价值，求出将这 <span
+class="math inline">\(N\)</span>
+个奖品分成价值相等的两组，共有多少种分法？</p>
+<p>例如：<span class="math inline">\(N = 5，S_1，S_2，S_3\dots
+S_n\)</span> 分别为 <span
+class="math inline">\(1，3，5，8，9\)</span></p>
+<p>则可分为 <span class="math inline">\(\{1，3，9\}\)</span> 与 <span
+class="math inline">\(\{5，8\}\)</span></p>
+<p>仅有 <span class="math inline">\(1\)</span> 种分法；</p>
+<p>例如：<span class="math inline">\(N = 7，S_1，S_2，S_3\dots
+S_n\)</span> 分别为 <span
+class="math inline">\(1，2，3，4，5，6，7\)</span></p>
+<p>则可分为：</p>
+<p><span class="math inline">\(\{1,6,7\}\)</span> 与 <span
+class="math inline">\(\{2,3,4,5\}\)</span></p>
+<p><span class="math inline">\(\{2,5,7\}\)</span> 与 <span
+class="math inline">\(\{1,3,4,6\}\)</span></p>
+<p><span class="math inline">\(\{3,4,7\}\)</span> 与 <span
+class="math inline">\(\{1,2,5,6\}\)</span></p>
+<p><span class="math inline">\(\{1,2,4,7\}\)</span> 与 <span
+class="math inline">\(\{3,5,6\}\)</span></p>
+<p>有 <span class="math inline">\(4\)</span> 种分法。</p>
+<h4 id="输入格式">输入格式</h4>
+<p>输入包含 <span class="math inline">\(N\)</span> 及 <span
+class="math inline">\(S_1，S_2，S_3\dots
+S_n\)</span>。（每两个相邻的数据之间有一个空格隔开）。</p>
+<h4 id="输出格式">输出格式</h4>
+<p>输出包含一个整数，表示多少种分法的答案，数据若无解，则输出 <span
+class="math inline">\(0\)</span>。</p>
+<h4 id="解法分析">解法分析</h4>
+<p>这题数据范围很小，所以写 dfs 都可以 AC。先上最好理解的 dfs:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">59</span>;</span><br><span class="line"><span class="type">int</span> n, sum, ans, a[N];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> cur, <span class="type">int</span> sub)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (cur &gt; (sum &gt;&gt; <span class="number">1</span>))</span><br><span class="line">        <span class="keyword">return</span> ;</span><br><span class="line">    <span class="keyword">if</span> (cur == (sum &gt;&gt; <span class="number">1</span>)) &#123;</span><br><span class="line">        ans++;</span><br><span class="line">        <span class="keyword">return</span> ;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = sub; i &lt;= n; i++)</span><br><span class="line">        <span class="built_in">dfs</span>(cur+a[i], i+<span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;n);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, a + i), sum += a[i];</span><br><span class="line">    <span class="keyword">if</span> (sum &amp; <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="built_in">puts</span>(<span class="string">&quot;0&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">dfs</span>(a[<span class="number">1</span>], <span class="number">2</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, ans);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>dp 解法：不难看出，此题是一道 <strong>01背包</strong>
+的求方案数类问题。每个奖品有<strong>选</strong>或者<strong>不选</strong>两种操作。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">5007</span>, M = <span class="number">50</span>;</span><br><span class="line"><span class="comment">// f[i] 表示当 sum=i 时有多少种分法</span></span><br><span class="line"><span class="type">int</span> f[N], a[M];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="type">int</span> n, sum = <span class="number">0</span>;</span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;n);</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">		<span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, a + i), sum += a[i];</span><br><span class="line">	<span class="keyword">if</span> (sum &amp; <span class="number">1</span>) &#123; <span class="built_in">puts</span>(<span class="string">&quot;0&quot;</span>); <span class="keyword">return</span> <span class="number">0</span>; &#125;</span><br><span class="line">	sum &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">	f[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">		<span class="keyword">for</span> (<span class="type">int</span> j = sum; j &gt;= a[i]; j--)</span><br><span class="line">			f[j] += f[j-a[i]];</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, f[sum]&gt;&gt;<span class="number">1</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="演讲大厅安排hall">2. 演讲大厅安排(hall)</h3>
+<h4 id="题目描述-1">题目描述</h4>
+<p>有一个演讲大厅需要我们管理，演讲者们事先定好了需要演讲的起始时间和中止时间。我们想让演讲大厅得到最大可能的使用。我们要接受一些预定而拒绝其他的预定，目标是使演讲者使用大厅的时间最长。假设在某一时刻一个演讲结束，另一个演讲就可以立即开始。</p>
+<p>【编程任务】</p>
+<ol type="1">
+<li><p>输入演讲者的申请。</p></li>
+<li><p>计算演讲大厅最大可能的使用时间。</p></li>
+<li><p>将结果输出。</p></li>
+</ol>
+<h4 id="输入格式-1">输入格式</h4>
+<p>输入第一行为一个整数 <span
+class="math inline">\(N(N≤5000)\)</span>，表示申请的数目。</p>
+<p>以下 <span class="math inline">\(n\)</span> 行每行包含两个整数 <span
+class="math inline">\(p,k(1 ≤ p &lt; k ≤
+30000)\)</span>，表示这个申请的起始时间和中止时间。</p>
+<h4 id="输出格式-1">输出格式</h4>
+<p>输出包含一个整数，表示大厅最大可能的使用时间。</p>
+<h4 id="解法分析-1">解法分析</h4>
+<p><del>首先感谢出题人，latex用的少</del></p>
+<p><strong>这题是一道经典的<a id="hall">线段覆盖问题</a>。</strong>这种问题的固定解法是：</p>
+<ol type="1">
+<li>通过结构体记录每一段线段的<strong>头</strong>和<strong>尾</strong></li>
+<li>按照<strong>尾</strong>从小到大排序</li>
+<li>使用 <strong>01背包</strong> 的解法解即可</li>
+</ol>
+<p>代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">1007</span>;</span><br><span class="line"><span class="type">int</span> f[N], a[N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> n, sum = <span class="number">0</span>;</span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;n);</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">		<span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, a + i), sum += a[i];</span><br><span class="line">	<span class="keyword">if</span> (sum &amp; <span class="number">1</span>) &#123; <span class="built_in">puts</span>(<span class="string">&quot;0&quot;</span>); <span class="keyword">return</span> <span class="number">0</span>; &#125;</span><br><span class="line">	sum &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">	f[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">		<span class="keyword">for</span> (<span class="type">int</span> j = sum; j &gt;= a[i]; j--)</span><br><span class="line">			f[j] += f[j-a[i]];</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, f[sum]&gt;&gt;<span class="number">1</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="火车票railway">3. 火车票(railway)</h3>
+<h4 id="题目描述-2">题目描述</h4>
+<p>从 Ekaterinburg 到 Sverdlovsk
+的火车线路上有若干个站点。这条线路可以近似的表示为一条线段，火车站就是线段上的点。线路始于
+Ekaterinburg ，终于 Sverdlovsk。Ekaterinburg 被标号为 <span
+class="math inline">\(1\)</span>，Sverdlovsk 被标号为 <span
+class="math inline">\(n\)</span>。（<span
+class="math inline">\(n\)</span> 为整条线路上的站点数）</p>
+<figure>
+<img src="https://s2.loli.net/2022/04/28/mJtfTwPcKzCvS9V.png"
+alt="image.png" />
+<figcaption aria-hidden="true">image.png</figcaption>
+</figure>
+<p>线路上的任意两个站点间的直达票价是由它们间的距离决定的，票价根据以下规则制定：</p>
+<figure>
+<img src="https://s2.loli.net/2022/04/28/goQezMNjHvAlypf.png"
+alt="f3b685001d.png" />
+<figcaption aria-hidden="true">f3b685001d.png</figcaption>
+</figure>
+<p>如果两站的间距超过 <span
+class="math inline">\(L_3\)</span>，则无直达车票。所以有时可能有必要买多张票，通过转车的方式，从一个站到达另一个站。</p>
+<p>例如，在上面的图中，有 <span class="math inline">\(7\)</span>
+个站点。<span class="math inline">\(2\)</span> 号站点到 <span
+class="math inline">\(6\)</span> 号站点的距离超过 <span
+class="math inline">\(L_3\)</span>，不能买直达票。存在若干种中转的方法，其中的一种是买两张票：先花费
+<span class="math inline">\(C_2\)</span> 从 <span
+class="math inline">\(2\)</span> 号站到达 <span
+class="math inline">\(3\)</span> 号站，然后花费 <span
+class="math inline">\(C_3\)</span> 从 <span
+class="math inline">\(3\)</span> 号站到 <span
+class="math inline">\(6\)</span> 号站，一种花费 <span
+class="math inline">\(C_2+C_3\)</span>。</p>
+<p>你的任务是，找出一种最经济的中转方案。</p>
+<h4 id="输入格式-2">输入格式</h4>
+<p>第一行 <span class="math inline">\(6\)</span> 个整数 <span
+class="math inline">\(L_1, L_2, L_3, C_1, C_2, C_3\ (1\le L_1\lt L_2\lt
+L_3\le 10^9, 1\le C_1\lt C_2\lt C3\le
+10^9)\)</span>，中间用空格分隔。</p>
+<p>第二行一个整数 <span class="math inline">\(n(2\le n\le
+100)\)</span>，表示线路上的车站数。</p>
+<p>第三行两个整数 <span class="math inline">\(s\)</span> 和 <span
+class="math inline">\(t\)</span>，分别是起点和终点的编号。注意：<span
+class="math inline">\(s\)</span> 不一定小于 <span
+class="math inline">\(t\)</span>。</p>
+<p>以下的 <span class="math inline">\(n-1\)</span> 行，按据 Ekaterinburg
+远近，每行描述了一个车站的位置。它包含一个整数，表示该车站距
+Ekaterinburg 的距离。</p>
+<p>任意两个车站的距离不超过 <span
+class="math inline">\(10^9\)</span>，任意两个相邻的车站的距离不超过
+<span class="math inline">\(L_3\)</span>。</p>
+<h4 id="输出格式-2">输出格式</h4>
+<p>一个整数，表示从给定的一个站到给定的另一个站的最小花费。</p>
+<h4 id="解法分析-2">解法分析</h4>
+<p>这道题是一道典型的 <a id="qujiandp"><strong>区间DP</strong></a>
+问题（可以把车站之间的距离看成一个物品）。</p>
+<p>区间 DP 套路：</p>
+<ol type="1">
+<li>定状态：<code>f[i][j]</code>表示从 <code>i~j</code>
+的区间（本题中表示从第 <code>i</code> 个车站到第 <code>j</code>
+个车站最少花费多少钱）。</li>
+<li>状态转移方程：<code>f[i][j] = min(f[i][k] + f[k][j])</code></li>
+</ol>
+<p>区间 DP 模式：</p>
+<ol type="1">
+<li><p>从小区间推至大区间（核心）</p></li>
+<li><p>循环伪代码：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> (区间长度) <span class="comment">// 通常循环变量为 i</span></span><br><span class="line">    <span class="keyword">for</span> (起点) &#123; <span class="comment">// 通常循环变量为 j</span></span><br><span class="line">        终点 = 起点 + 区间长度 - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (断点) <span class="comment">// 通常循环变量为 k</span></span><br><span class="line">            状态转移方程;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>对于上面的代码，<span class="math inline">\(i,\ j,\ k\)</span>
+必须满足以下条件： <span class="math display">\[
+\begin{cases}
+k+1&gt;i \\
+[i, j] 的范围大于 [i, k],[k+1, j],因此要从小区间枚举到大区间
+\end{cases}
+\]</span> 由于在一般的 区间DP 的最小区间是 <span
+class="math inline">\(f[i][i]\)</span>，所以通常会将其初始化(例如
+<a href="#hebingshizi">合并石子</a>)。当然，在一些 区间DP
+的变式中，不一定这样初始化(例如本题)。</p>
+<p>本题代码：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="keyword">typedef</span> <span class="type">long</span> <span class="type">long</span> LL;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">109</span>, INF = <span class="number">0X3F3F3F3F3F3F3F3F</span>;</span><br><span class="line">LL f[N][N], L[N], C[N], loc[N];</span><br><span class="line"><span class="function">LL <span class="title">calc</span><span class="params">(LL s)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">3</span>; i++)</span><br><span class="line">		<span class="keyword">if</span> (s &lt;= L[i]) <span class="keyword">return</span> C[i];</span><br><span class="line">	<span class="keyword">return</span> INF;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">3</span>; i++)</span><br><span class="line">		<span class="built_in">scanf</span>(<span class="string">&quot;%lld&quot;</span>, L + i);</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">3</span>; i++)</span><br><span class="line">		<span class="built_in">scanf</span>(<span class="string">&quot;%lld&quot;</span>, C + i);</span><br><span class="line">	<span class="type">int</span> n, s, t;</span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">&quot;%d%d%d&quot;</span>, &amp;n, &amp;s, &amp;t);</span><br><span class="line">	<span class="built_in">memset</span>(f, <span class="number">0x3F</span>, <span class="keyword">sizeof</span> f);</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">2</span>; i &lt;= n; i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, loc + i);</span><br><span class="line">		f[i<span class="number">-1</span>][i] = <span class="built_in">calc</span>(loc[i] - loc[i<span class="number">-1</span>]);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (s &gt; t) std::<span class="built_in">swap</span>(s, t);</span><br><span class="line">	<span class="comment">// 区间 DP 第一层是枚举长度</span></span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> d = <span class="number">2</span>; d &lt;= n; d++)</span><br><span class="line">		<span class="comment">// 第二层枚举起点</span></span><br><span class="line">		<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i+d<span class="number">-1</span> &lt;= n; i++)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="type">int</span> j = i + d - <span class="number">1</span>;</span><br><span class="line">			f[i][j] = <span class="built_in">calc</span>(loc[j] - loc[i]);</span><br><span class="line">			<span class="keyword">for</span> (<span class="type">int</span> k = i+<span class="number">1</span>; k &lt; j; k++)</span><br><span class="line">				f[i][j] = std::<span class="built_in">min</span>(f[i][j], f[i][k]+f[k][j]);</span><br><span class="line">		&#125;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;%lld&quot;</span>, f[s][t]);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="单词的划分word">4. 单词的划分(word)</h3>
+<h4 id="题目描述-3">题目描述</h4>
+<p>有一个很长的由小写字母组成字符串。为了便于对这个字符串进行分析，需要将它划分成若干个部分，每个部分称为一个单词。出于减少分析量的目的，我们希望划分出的单词数越少越好。你就是来完成这一划分工作的。</p>
+<h4 id="输入格式-3">输入格式</h4>
+<p>第 <span class="math inline">\(1\)</span>
+行，一个字符串。（字符串的长度不超过 <span
+class="math inline">\(100\)</span>）</p>
+<p>第 <span class="math inline">\(2\)</span> 行一个整数 <span
+class="math inline">\(n\)</span>，表示单词的个数。（<span
+class="math inline">\(n&lt;=100\)</span>）</p>
+<p>第 <span class="math inline">\(3\sim n+2\)</span>
+行，每行列出一个单词。</p>
+<h4 id="输出格式-3">输出格式</h4>
+<p>一个整数，表示字符串可以被划分成的最少的单词数。</p>
+<h4 id="解法分析-3">解法分析</h4>
+<p>这题是一道背包问题。把背包问题要素整理出来得：</p>
+<ol type="1">
+<li>背包容量：字符串长度</li>
+<li>物品数：单词个数</li>
+<li>物品价值：单词内容</li>
+<li>物品体积：单词长度</li>
+<li>物品数量：undefined</li>
+</ol>
+<p>由此可以知道，本题是一道 <strong>01背包</strong></p>
+<p>代码：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> std::string;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">107</span>;</span><br><span class="line">std::map &lt;string, <span class="type">bool</span>&gt; mp;</span><br><span class="line"><span class="type">int</span> f[N], n;</span><br><span class="line">string s, w;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="built_in">memset</span>(f, <span class="number">0x3F</span>, <span class="keyword">sizeof</span> f);</span><br><span class="line">	std::cin &gt;&gt; s &gt;&gt; n;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">	&#123;</span><br><span class="line">		std::cin &gt;&gt; w;</span><br><span class="line">		mp[w] = <span class="literal">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (mp[s.<span class="built_in">substr</span>(<span class="number">0</span>, <span class="number">1</span>)]) f[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">unsigned</span> i = <span class="number">1</span>; i &lt; s.<span class="built_in">size</span>(); i++)</span><br><span class="line">		<span class="keyword">for</span> (<span class="type">int</span> len = i+<span class="number">1</span>; len; len--)</span><br><span class="line">		&#123;</span><br><span class="line">			string ss = s.<span class="built_in">substr</span>(i+<span class="number">1</span>-len, len);</span><br><span class="line">			<span class="keyword">if</span> (mp[ss] == <span class="literal">false</span>) <span class="keyword">continue</span>;</span><br><span class="line">			<span class="keyword">if</span> (i+<span class="number">1</span>-len == <span class="number">0</span>) &#123; f[i] = <span class="number">1</span>; <span class="keyword">break</span>; &#125;</span><br><span class="line">			f[i] = std::<span class="built_in">min</span>(f[i], f[i-len]+<span class="number">1</span>);</span><br><span class="line">		&#125;	</span><br><span class="line">	std::cout &lt;&lt; f[s.<span class="built_in">size</span>()<span class="number">-1</span>];</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="饥饿的牛hunger">5. 饥饿的牛(hunger)</h3>
+<h4 id="题目描述-4">题目描述</h4>
+<p>牛在饲料槽前排好了队。饲料槽依次用 <span
+class="math inline">\(1\)</span> 到 <span class="math inline">\(N(1\le
+N\le 2000)\)</span>
+编号。每天晚上，一头幸运的牛根据约翰的规则，吃其中一些槽里的饲料。</p>
+<p>约翰提供 <span class="math inline">\(B\)</span><em>B</em>
+个区间的清单。一个区间是一对整数 <span
+class="math inline">\(start-end(1\le start\le end\le
+N)\)</span>，表示一些连续的饲料槽，比如 <span
+class="math inline">\(1\sim 3,7\sim 8,3\sim 4\)</span>
+等等。牛可以任意选择区间，但是牛选择的区间不能有重叠。</p>
+<p>当然，牛希望自己能够吃得越多越好。给出一些区间，帮助这只牛找一些区间，使它能吃到最多的东西。</p>
+<p>在上面的例子中，<span class="math inline">\(1\sim 3\)</span> 和 <span
+class="math inline">\(3\sim 4\)</span> 是重叠的；聪明的牛选择 <span
+class="math inline">\(\{1\sim3，7\sim 8\}\)</span>，这样可以吃到 <span
+class="math inline">\(5\)</span> 个槽里的东西。</p>
+<h4 id="输入格式-4">输入格式</h4>
+<p>第 <span class="math inline">\(1\)</span> 行，整数 <span
+class="math inline">\(B(1\le B\le 1000)\)</span>。</p>
+<p>第 <span class="math inline">\(2\sim B+1\)</span>
+行，每行两个整数，表示一个区间，较小的端点在前面。</p>
+<h4 id="输出格式-4">输出格式</h4>
+<p>仅一个整数，表示最多能吃到多少个槽里的食物。</p>
+<h4 id="解法分析-4">解法分析</h4>
+<p>这又是一道线段覆盖问题，分析见
+<a href="#hall">演讲大厅安排(hall)</a></p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">2009</span>;</span><br><span class="line"><span class="type">int</span> b, f[N];</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Node</span> &#123;</span><br><span class="line">    <span class="type">int</span> st, ed;</span><br><span class="line">&#125; feed[N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;b);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= b; i++)</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%d%d&quot;</span>, &amp;feed[i].st, &amp;feed[i].ed);</span><br><span class="line">    std::<span class="built_in">sort</span>(feed + <span class="number">1</span>, feed + b + <span class="number">1</span>, [](<span class="type">const</span> Node &amp;a, <span class="type">const</span> Node &amp;b) &#123;</span><br><span class="line">        <span class="keyword">return</span> a.ed&lt;b.ed <span class="built_in">or</span> (a.ed==b.ed <span class="keyword">and</span> a.st&lt;b.st);</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="type">int</span> m = feed[b].ed;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= b; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = m; j &gt;= feed[i].ed; j--)</span><br><span class="line">            f[j] = std::<span class="built_in">max</span>(f[j], f[feed[i].st<span class="number">-1</span>] + feed[i].ed - feed[i].st + <span class="number">1</span>);</span><br><span class="line">        <span class="comment">// for (int j = 1; j &lt;= m; j++)</span></span><br><span class="line">        <span class="comment">//     printf(&quot;%d &quot;, f[j]);</span></span><br><span class="line">        <span class="comment">// puts(&quot;&quot;);</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, f[m]);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="数字游戏game">6. 数字游戏(game)</h3>
+<h4 id="题目描述-5">题目描述</h4>
+<p>丁丁最近沉迷于一个数字游戏。这个游戏看似简单，但丁丁在研究了许多天之后却发觉原来在简单的规则下想要赢得这个游戏并不那么容易。</p>
+<p>游戏是这样的，在你面前有一圈整数（一共 <span
+class="math inline">\(n\)</span> 个），你要按顺序将其分为 <span
+class="math inline">\(m\)</span> 个部分，各部分内的数字相加，相加所得的
+<span class="math inline">\(m\)</span> 个结果对 <span
+class="math inline">\(10\)</span> 取模后再相乘，最终得到一个数 <span
+class="math inline">\(k\)</span>。游戏的要求是使你所得的 <span
+class="math inline">\(k\)</span> 最大或者最小。</p>
+<p>例如，对于下面这圈数字（<span
+class="math inline">\(n=4,m=2\)</span>）：</p>
+<figure>
+<img src="https://s2.loli.net/2022/04/28/wYprJjBfLU7GuN8.png"
+alt="1.png" />
+<figcaption aria-hidden="true">1.png</figcaption>
+</figure>
+<p>当要求最小值时， <span class="math display">\[
+((2−1)\ mod\ 10)×((4+3)\ mod\ 10)=1×7=7
+\]</span> 要求最大值时，为 <span class="math display">\[
+((2+4+3)\ mod\ 10)×(−1\ mod\ 10)=9×9=81
+\]</span> 特别值得注意的是，无论是负数还是正数，对 <span
+class="math inline">\(10\)</span> 取模的结果均为非负值。</p>
+<p>丁丁请你编写程序帮他赢得这个游戏。</p>
+<h4 id="输入格式-5">输入格式</h4>
+<p>输入第一行有两个整数，<span class="math inline">\(n(1\le n\le
+50)\)</span> 和 <span class="math inline">\(m(1\le m\le
+9)\)</span>。</p>
+<p>以下 <span class="math inline">\(n\)</span>
+行每行有一个整数，其绝对值不大于 <span
+class="math inline">\(10^4\)</span>，按顺序给出圈中的数字，首尾相接。</p>
+<h4 id="输出格式-5">输出格式</h4>
+<p>输出有两行，各包含一个非负整数。第一行是你程序得到的最小值，第二行是最大值。</p>
+<h4 id="解法分析-5">解法分析</h4>
+<p>遇到这种<a id="huanxindp"><strong>环形区间DP</strong></a>时，我们采用<strong>破环成链</strong>的方法，即将链拷贝一份加在末尾</p>
+<p>例如：4 3 -1 2 -&gt; 4 3 -1 2 4 3 -1 2</p>
+<table>
+<thead>
+<tr class="header">
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+<th>7</th>
+<th>8</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>4</td>
+<td>3</td>
+<td>-1</td>
+<td>2</td>
+<td>4</td>
+<td>3</td>
+<td>-1</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p>长度最大为 N 的区间有 N 个，分别为
+<code>[1,n], [2,n+1], [3,n+2], ... ,[n,n+n-1]</code>。我们最终在这 N
+个情况中选择最优解。</p>
+<p>其他的都不解释了，代码里注释比较清楚，有问题可以留言。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">109</span>, INF = <span class="number">0x3F3F3F3F</span>;</span><br><span class="line"><span class="comment">// f[i][j][z] 表示从 i 到 j 的部分，分成 z 份的最大值</span></span><br><span class="line"><span class="comment">// g[i][j][z] 表示从 i 到 j 的部分，分成 z 份的最小值</span></span><br><span class="line"><span class="type">int</span> f[N][N][<span class="number">10</span>], g[N][N][<span class="number">10</span>];    </span><br><span class="line"><span class="type">int</span> n, m;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d%d&quot;</span>, &amp;n, &amp;m);</span><br><span class="line">    <span class="built_in">memset</span>(g, INF, <span class="keyword">sizeof</span> g);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;f[i][i][<span class="number">1</span>]);</span><br><span class="line">        <span class="comment">// 将所有的数全部转成大于等于0且小于等于10的整数</span></span><br><span class="line">        f[i][i][<span class="number">1</span>] = g[i][i][<span class="number">1</span>] = (f[i][i][<span class="number">1</span>]%<span class="number">10</span> + <span class="number">10</span>) % <span class="number">10</span>;</span><br><span class="line">        <span class="comment">// &quot;破环成链&quot;</span></span><br><span class="line">        f[n+i][n+i][<span class="number">1</span>] = g[n+i][n+i][<span class="number">1</span>] = f[i][i][<span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 求前缀和</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt; n+n; i++) </span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = i+<span class="number">1</span>; j &lt;= n+n; j++)</span><br><span class="line">            g[i][j][<span class="number">1</span>] = f[i][j][<span class="number">1</span>] = (f[i][j<span class="number">-1</span>][<span class="number">1</span>] + f[j][j][<span class="number">1</span>]) % <span class="number">10</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> z = <span class="number">2</span>; z &lt;= m; z++) <span class="comment">// 枚举份数</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++) <span class="comment">// 枚举左端点</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> j = i+z<span class="number">-1</span>; j &lt; i+n; j++) <span class="comment">// 枚举右端点</span></span><br><span class="line">                <span class="keyword">for</span> (<span class="type">int</span> k = i+z<span class="number">-2</span>; k &lt; j; k++) &#123; <span class="comment">// 枚举中间节点</span></span><br><span class="line">                    g[i][j][z] = std::<span class="built_in">min</span>(g[i][j][z], g[i][k][z<span class="number">-1</span>] * g[k+<span class="number">1</span>][j][<span class="number">1</span>]);</span><br><span class="line">                    f[i][j][z] = std::<span class="built_in">max</span>(f[i][j][z], f[i][k][z<span class="number">-1</span>] * f[k+<span class="number">1</span>][j][<span class="number">1</span>]);</span><br><span class="line">                &#125;</span><br><span class="line">    <span class="comment">// 求最大&amp;最小值</span></span><br><span class="line">    <span class="type">int</span> mx = <span class="number">0</span>, mn = INF; </span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">        mx = f[i][i+n<span class="number">-1</span>][m]&gt;mx ? f[i][i+n<span class="number">-1</span>][m] : mx;</span><br><span class="line">        mn = g[i][i+n<span class="number">-1</span>][m]&lt;mn ? g[i][i+n<span class="number">-1</span>][m] : mn;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n%d\n&quot;</span>, mn, mx);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="能量项链energy">7. 能量项链(energy)</h3>
+<h4 id="题目描述-6">题目描述</h4>
+<p>在Mars星球上，每个Mars人都随身佩带着一串能量项链。在项链上有 <span
+class="math inline">\(N\)</span>
+颗能量珠。能量珠是一颗有头标记与尾标记的珠子，这些标记对应着某个正整数。并且，对于相邻的两颗珠子，前一颗珠子的尾标记一定等于后一颗珠子的头标记。因为只有这样，通过吸盘（吸盘是Mars人吸收能量的一种器官）的作用，这两颗珠子才能聚合成一颗珠子，同时释放出可以被吸盘吸收的能量。如果前一颗能量珠的头标记为
+<span class="math inline">\(m\)</span>，尾标记为 <span
+class="math inline">\(r\)</span>，后一颗能量珠的头标记为 <span
+class="math inline">\(r\)</span>，尾标记为 <span
+class="math inline">\(n\)</span>，则聚合后释放的能量为 <span
+class="math inline">\(m\ast r\ast n\)</span>
+（Mars单位），新产生的珠子的头标记为 <span
+class="math inline">\(m\)</span>，尾标记为 <span
+class="math inline">\(n\)</span>。</p>
+<p>需要时，Mars人就用吸盘夹住相邻的两颗珠子，通过聚合得到能量，直到项链上只剩下一颗珠子为止。显然，不同的聚合顺序得到的总能量是不同的，请你设计一个聚合顺序，使一串项链释放出的总能量最大。</p>
+<p>例如：设 <span class="math inline">\(N=4\)</span>，<span
+class="math inline">\(4\)</span> 颗珠子的头标记与尾标记依次为 <span
+class="math inline">\((2,3) (3,5) (5,10) (10,2)\)</span>。我们用记号
+<span class="math inline">\(\bigoplus\)</span>
+表示两颗珠子的聚合操作，<span class="math inline">\((j\bigoplus
+k)\)</span> 表示第 <span class="math inline">\(j,k\)</span>
+两颗珠子聚合后所释放的能量。则第 <span class="math inline">\(4,
+1\)</span> 两颗珠子聚合后释放的能量为： <span class="math display">\[
+(4\bigoplus1)=10\times 2\times 3=60
+\]</span> 这一串项链可以得到最优值的一个聚合顺序所释放的总能量为 <span
+class="math display">\[
+((4\bigoplus 1)\bigoplus 2)\bigoplus 3）=10\times 2\times 3+10\times
+3\times 5+10\times 5\times 10=710
+\]</span></p>
+<h4 id="输入格式-6">输入格式</h4>
+<p>输入第一行是一个正整数 <span class="math inline">\(N(4\le N\le
+100)\)</span>，表示项链上珠子的个数。第二行是 <span
+class="math inline">\(N\)</span> 个用空格隔开的正整数，所有的数均不超过
+<span class="math inline">\(1000\)</span>。第 <span
+class="math inline">\(i\)</span> 个数为第 <span
+class="math inline">\(i\)</span> 颗珠子的头标记<span
+class="math inline">\((1\le i\le N)\)</span>，当 <span
+class="math inline">\(i&lt;N\)</span> 时，第 <span
+class="math inline">\(i\)</span> 颗珠子的尾标记应该等于第 <span
+class="math inline">\(i+1\)</span> 颗珠子的头标记。第 <span
+class="math inline">\(N\)</span> 颗珠子的尾标记应该等于第 <span
+class="math inline">\(1\)</span> 颗珠子的头标记。</p>
+<p>至于珠子的顺序，你可以这样确定：将项链放到桌面上，不要出现交叉，随意指定第一颗珠子，然后按顺时针方向确定其他珠子的顺序。</p>
+<h4 id="输出格式-6">输出格式</h4>
+<p>输出只有一行，是一个正整数 <span class="math inline">\(E(E≤2.1\times
+10^9)\)</span>，为一个最优聚合顺序所释放的总能量。</p>
+<h4 id="解法分析-6">解法分析</h4>
+<p>这题仍然是一道<a href="#huanxindp">环形DP问题</a>，就不详细讲了。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">209</span>;</span><br><span class="line"><span class="type">int</span> n, f[N][N];</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">node</span> &#123;</span><br><span class="line">    <span class="type">int</span> x, y;</span><br><span class="line">&#125; a[N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;n);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;a[i].x);</span><br><span class="line">        a[i+n].x = a[i].x, a[i<span class="number">-1</span>].y = a[i+n<span class="number">-1</span>].y = a[i].x;</span><br><span class="line">    &#125; a[<span class="number">2</span>*n].y = a[<span class="number">1</span>].x; <span class="comment">// 初始化数组</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> len = <span class="number">1</span>; len &lt;= n; len++)</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i+len &lt; <span class="number">2</span>*n; i++) &#123;</span><br><span class="line">            <span class="type">int</span> t = i + len;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> k = i; k &lt; t; k++)</span><br><span class="line">                f[i][t] = std::<span class="built_in">max</span>(f[i][t], f[i][k] + f[k+<span class="number">1</span>][t] + a[i].x * a[k].y * a[t].y);</span><br><span class="line">        &#125;</span><br><span class="line">    <span class="type">int</span> ans = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        ans = std::<span class="built_in">max</span>(ans, f[i][i+n<span class="number">-1</span>]);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, ans);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="传纸条message">8. 传纸条(message)</h3>
+<h4 id="题目描述-7">题目描述</h4>
+<p>小渊和小轩是好朋友也是同班同学，他们在一起总有谈不完的话题。一次素质拓展活动中，班上同学安排做成一个
+<span class="math inline">\(m\)</span> 行 <span
+class="math inline">\(n\)</span>
+列的矩阵，而小渊和小轩被安排在矩阵对角线的两端，因此，他们就无法直接交谈了。幸运的是，他们可以通过传纸条来进行交流。纸条要经由许多同学传到对方手里，小渊坐在矩阵的左上角，坐标
+<span class="math inline">\((1,1)\)</span>，小轩坐在矩阵的右下角，坐标
+<span class="math inline">\((m,n)\)</span>。</p>
+<p>从小渊传到小轩的纸条只可以向下或者向右传递，从小轩传给小渊的纸条只可以向上或者向左传递。</p>
+<p>在活动进行中，小渊希望给小轩传递一张纸条，同时希望小轩给他回复。班里每个同学都可以帮他们传递，但只会帮他们一次，也就是说如果此人在小渊递给小轩纸条的时候帮忙，那么在小轩递给小渊的时候就不会再帮忙。反之亦然。</p>
+<p>还有一件事情需要注意，全班每个同学愿意帮忙的好感度有高有低（注意：小渊和小轩的好心程度没有定义，输入时用
+<span class="math inline">\(0\)</span> 表示），可以用一个 <span
+class="math inline">\(0\sim 100\)</span>
+的自然数来表示，数越大表示越好心。小渊和小轩希望尽可能找好心程度高的同学来帮忙传纸条，即找到来回两条传递路径，使得这两条路径上同学的好心程度之和最大。现在，请你帮助小渊和小轩找到这样的两条路径。</p>
+<h4 id="输入格式-7">输入格式</h4>
+<p>输入的第一行有 <span class="math inline">\(2\)</span>
+个用空格隔开的整数 <span class="math inline">\(m\)</span> 和 <span
+class="math inline">\(n\)</span>，表示班里有 <span
+class="math inline">\(m\)</span> 行 <span
+class="math inline">\(n\)</span> 列 <span class="math inline">\((1\le
+m,n\le 50)\)</span>。</p>
+<p>接下来的 <span class="math inline">\(m\)</span> 行是一个 <span
+class="math inline">\(m\times n\)</span> 的矩阵，矩阵中第 <span
+class="math inline">\(i\)</span> 行 <span
+class="math inline">\(j\)</span> 列的整数表示坐在第 <span
+class="math inline">\(i\)</span> 行 <span
+class="math inline">\(j\)</span> 列的学生的好心程度。每行的 <span
+class="math inline">\(n\)</span> 个整数之间用空格隔开。</p>
+<h4 id="输出格式-7">输出格式</h4>
+<p>输出共一行，包含一个整数，表示来回两条路上参与传递纸条的学生的好心程度之和的最大值。</p>
+<h4 id="解法分析-7">解法分析</h4>
+<p>这道题难度较大，先定下状态：<code>f[i][j][p][q]</code> 表示
+<strong>从小渊传到小轩的纸条到达 <span
+class="math inline">\((i,j)\)</span>，从小轩传给小渊的纸条到达 <span
+class="math inline">\((p,q)\)</span>
+的路径上取得的最大的好心程度和</strong> （这是坐标类DP的常见状态）</p>
+<p>换句话说，即求<strong>第一张纸条到达 <span
+class="math inline">\((i,j)\)</span>，第二纸条到达 <span
+class="math inline">\((p,q)\)</span>
+的路径上取得的最大的好心程度和，且两条路径严格不相交</strong></p>
+<p>所以，为了保证两条路径不重复，必须限制 <span
+class="math inline">\(q&gt;j\)</span>。如果不理解为什么这么限制，那么也可以让
+<span class="math inline">\(q\)</span> 从 <span
+class="math inline">\(1\)</span> 开始枚举，但是需要判断 <span
+class="math inline">\((i,j)\)</span> 与 <span class="math inline">\((p,
+q)\)</span> 是否重合，若重合就把 <span class="math inline">\(f\)</span>
+数组转移后减掉 <code>a[i][j]</code> 或 <code>a[p][q]</code>。</p>
+<p>时间复杂度 <span class="math inline">\(O(n^2\times
+m^2)\)</span>，即最多 <span class="math inline">\(6250000\)</span>
+次计算，可以
+<font color="green" size="5px"><strong>AC</strong></font></p>
+<p>当然，可以优化这种算法。我们发现，<span
+class="math inline">\(i+j=p+q=step\)</span> ，所以可以用 <span
+class="math inline">\(step\)</span>
+来表示其他两维，这样就实现了四维到三维的降维。这样，时间复杂度降低到
+<span class="math inline">\(O(n^2\times (n+m))\)</span>，即最多 <span
+class="math inline">\(250000\)</span> 次计算，比上一种算法快 <span
+class="math inline">\(20\)</span>
+多倍。由于这种算法原理与第一种一样，就不给出代码<del>（懒）</del>，供读者思考。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> std::max;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">55</span>;</span><br><span class="line"><span class="type">int</span> m, n, a[N][N], f[N][N][N][N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">max_of_four_ele</span><span class="params">(<span class="type">int</span> liu, <span class="type">int</span> rong, <span class="type">int</span> sha, <span class="type">int</span> bi)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">max</span>(liu, <span class="built_in">max</span>(rong, <span class="built_in">max</span>(sha, bi)));</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d%d&quot;</span>, &amp;m, &amp;n);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= m; i++)</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">1</span>; j &lt;= n; j++)</span><br><span class="line">            <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;a[i][j]);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= m; i++)</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">1</span>; j &lt;= n; j++)</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> p = <span class="number">1</span>; p &lt;= m; p++)</span><br><span class="line">                <span class="keyword">for</span> (<span class="type">int</span> q = j+<span class="number">1</span>; q &lt;= n; q++)</span><br><span class="line">                    f[i][j][p][q] = <span class="built_in">max_of_four_ele</span>(f[i<span class="number">-1</span>][j][p<span class="number">-1</span>][q], f[i][j<span class="number">-1</span>][p<span class="number">-1</span>][q], f[i<span class="number">-1</span>][j][p][q<span class="number">-1</span>], f[i][j<span class="number">-1</span>][p][q<span class="number">-1</span>]) + a[i][j] + a[p][q];</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, f[m][n<span class="number">-1</span>][m<span class="number">-1</span>][n]);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="筷子chop">9. 筷子(chop)</h3>
+<h4 id="题目描述-8">题目描述</h4>
+<p>A
+先生有很多双筷子。确切的说应该是很多根，因为筷子的长度不一，很难判断出哪两根是一双的。这天，A
+先生家里来了 <span class="math inline">\(K\)</span> 个客人，A
+先生留下他们吃晚饭。加上 A 先生，A 夫人和他们的孩子小 A，共 <span
+class="math inline">\(K+3\)</span> 个人。每人需要用一双筷子。A
+先生只好清理了一下筷子，共 <span class="math inline">\(N\)</span>
+根，长度为 <span
+class="math inline">\(T_1,T_2,T_3,\dots,T_N\)</span>。</p>
+<p>现在他想用这些筷子组合成 <span class="math inline">\(K+3\)</span>
+双，使每双的筷子长度差的平方和最小。(怎么不是和最小？？这要去问 A
+先生了，呵呵)</p>
+<h4 id="输入格式-8">输入格式</h4>
+<p>输入共有两行，第一行为两个用空格隔开的整数，表示 <span
+class="math inline">\(N,K(1≤N≤100, 0&lt;K&lt;50)\)</span>，第二行共有
+N<em>N</em> 个用空格隔开的整数，为 <span
+class="math inline">\(T_i\)</span>。每个整数为 <span
+class="math inline">\(1\sim 50\)</span> 之间的数。</p>
+<h4 id="输出格式-8">输出格式</h4>
+<p>输出仅一行。如果凑不齐 <span class="math inline">\(K+3\)</span>
+双，输出 <span
+class="math inline">\(-1\)</span>，否则输出长度差平方和的最小值。</p>
+<h4 id="解法分析-8">解法分析</h4>
+<p>背包问题变形。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">107</span>;</span><br><span class="line"><span class="type">int</span> n, k, a[N], f[N][N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d%d&quot;</span>, &amp;n, &amp;k); k += <span class="number">3</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, a + i);</span><br><span class="line">    <span class="keyword">if</span> (k+k &gt; n) &#123; <span class="built_in">puts</span>(<span class="string">&quot;-1&quot;</span>); <span class="keyword">return</span> <span class="number">0</span>; &#125;</span><br><span class="line">    std::<span class="built_in">sort</span>(a + <span class="number">1</span>, a + n + <span class="number">1</span>);</span><br><span class="line">    <span class="built_in">memset</span>(f, <span class="number">0x3F</span>, <span class="keyword">sizeof</span> f);</span><br><span class="line">    f[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= k; i++)</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = i+i; j &lt;= n; j++)</span><br><span class="line">            f[i][j] = std::<span class="built_in">min</span>(f[i][j<span class="number">-1</span>], f[i<span class="number">-1</span>][j<span class="number">-2</span>] + (a[j]-a[j<span class="number">-1</span>])*(a[j]-a[j<span class="number">-1</span>]));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, f[k][n]);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="合并石子merge">10. 合并石子(merge)</h3>
+<h4 id="题目描述-9">题目描述</h4>
+<p>在一个操场上一排地摆放着 <span class="math inline">\(N\)</span>
+堆石子。现要将石子有次序地合并成一堆。规定每次只能选相邻的 <span
+class="math inline">\(2\)</span>
+堆石子合并成新的一堆，并将新的一堆石子数记为该次合并的得分。</p>
+<p>试设计一个程序，计算出将 <span class="math inline">\(N\)</span>
+堆石子合并成一堆的最小得分。</p>
+<h4 id="输入格式-9">输入格式</h4>
+<p>第一行为一个正整数 <span class="math inline">\(N\ (2\le N\le
+100)\)</span>；</p>
+<p>以下 <span class="math inline">\(N\)</span> 行,每行一个正整数，小于
+<span class="math inline">\(10000\)</span>，分别表示第 <span
+class="math inline">\(i\)</span> 堆石子的个数。</p>
+<h4 id="输出格式-9">输出格式</h4>
+<p>为一个正整数，即最小得分。</p>
+<h4 id="解法分析-9"><a id="hebingshizi">解法分析</a></h4>
+<p>这是一道最经典的区间DP了，<del>真不知道为什么我要把这题拿到最后才讲</del>。区间DP的解法在之前已经讲过了，这里不再赘述。<a href="#qujiandp">点我跳转</a></p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">109</span>, INF = <span class="number">0x3F3F3F3F</span>;</span><br><span class="line"><span class="type">int</span> n, s[N], f[N][N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;n);</span><br><span class="line">    <span class="built_in">memset</span>(f, INF, <span class="keyword">sizeof</span> f);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        f[i][i] = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, s + i), s[i] += s[i<span class="number">-1</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = n<span class="number">-1</span>; i &gt;= <span class="number">1</span>; i--)</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = i+<span class="number">1</span>; j &lt;= n; j++) &#123;</span><br><span class="line">            <span class="type">int</span> t = s[j] - s[i<span class="number">-1</span>];</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> k = i; k &lt; j; k++)</span><br><span class="line">                f[i][j] = std::<span class="built_in">min</span>(f[i][j], f[i][k] + f[k+<span class="number">1</span>][j] + t);</span><br><span class="line">        &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, f[<span class="number">1</span>][n]);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>动态规划, C++, 算法, 经典问题</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【数据结构】栈</title>
+    <url>/2022/06/14/%E3%80%90%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E3%80%91%E6%A0%88/</url>
+    <content><![CDATA[<h3 id="栈的定义">栈的定义</h3>
+<p>栈是限制插入和删除操作只能在一个位置上进行的表。它是一种 ==LIFO(Last
+In First Out)== 线性表。</p>
+<p>表的末端成为栈的<strong>顶(top)</strong></p>
+<p><img src="https://s2.loli.net/2022/05/15/vHj5GwAotcmnBWh.png" alt="top" style="zoom:50%;" /></p>
+<h3 id="栈的操作与实现">栈的操作与实现</h3>
+<h4 id="数组实现">数组实现</h4>
+<p><strong>以下代码前提：</strong></p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">1009</span>; <span class="comment">// 按需定</span></span><br><span class="line"><span class="type">int</span> stk[N], tp;</span><br></pre></td></tr></table></figure>
+<ol type="1">
+<li><p><code>push</code> 操作(入栈)</p>
+<blockquote>
+<p>注意事项：入栈前务必要检查栈是否为满。</p>
+<p>不过，一般情况下，栈定义的大小总比题目中要求的大，所以可以不判断是否满。</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">push</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (tp == N)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="comment">// 以上代码可写可不写</span></span><br><span class="line">   	stk[++tp] = x;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>pop</code> 操作(出栈)</p>
+<blockquote>
+<p>注意事项：出栈前务必要检查栈是否为空。</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">pop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (tp == <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">   	tp--;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>isEmpty</code> 操作(判断栈是否为空)</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">isEmpty</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> tp == <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>isFull</code> 操作(判断栈是否为满)</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">isFull</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> tp == N;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>size</code> 操作(栈的大小)</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">size</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> tp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>top</code> 操作(返回栈顶元素的引用)</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">top</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> stk[tp];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>clear</code> 操作(清空栈)</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">clear</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    tp = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="stl-实现"><code>STL</code> 实现</h4>
+<p>使用前，必须加上头文件 <code>#include &lt;stack&gt;</code> &amp;
+标准名字空间 <code>using std::stack;</code></p>
+<p><strong>示例代码：</strong></p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stack&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> std::stack;</span><br><span class="line">stack&lt;<span class="type">int</span>&gt; stk;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="type">int</span> x = <span class="number">10</span>; <span class="comment">// 待入栈元素</span></span><br><span class="line">    stk.<span class="built_in">push</span>(x); <span class="comment">// 入栈操作</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;top=%d size=%d\n&quot;</span>, stk.<span class="built_in">top</span>(), stk.<span class="built_in">size</span>()); <span class="comment">// 返回栈顶指针的引用 &amp; 栈的大小</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;isEmpty=%d\n&quot;</span>, stk.<span class="built_in">empty</span>()); <span class="comment">// 返回栈是否为空</span></span><br><span class="line">    <span class="keyword">if</span> (!stk.<span class="built_in">empty</span>()) stk.<span class="built_in">pop</span>(); <span class="comment">// 出栈操作</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;size=%d\n&quot;</span>, stk.<span class="built_in">size</span>()); <span class="comment">// 返回栈的大小 *PS: 此处不能输出 stk.top() !</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;isEmpty=%d\n&quot;</span>, stk.<span class="built_in">empty</span>()); <span class="comment">// 返回栈是否为空</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上函数的时间复杂度均为 <span
+class="math inline">\(O(1)\)</span></p>
+<p>值得注意的是，<code>STL</code>
+并没有清空栈的函数，所以，如果想要清空栈，只能这么写：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">while</span> (stk.<span class="built_in">size</span>())</span><br><span class="line">    stk.<span class="built_in">pop</span>();</span><br></pre></td></tr></table></figure>
+<h3 id="栈的应用">栈的应用</h3>
+<h4 id="括号配对问题-easy">括号配对问题 / Easy</h4>
+<p>假设表达式中允许包含两种括号：圆括号和方括号，其嵌套的顺序随意，如 (
+[ ] ( ) ) 或 [ ( [ ] [ ] ) ] 等为正确的匹配，[ ( ] ) 或( [ ] ( ) 或 ( (
+) ) ）均为错误的匹配。</p>
+<p>现在的问题是，要求检验一个给定表达式中的括弧是否正确匹配？</p>
+<p>输入一个只包含圆括号和方括号的字符串，判断字符串中的括号是否匹配，匹配就输出<code>OK</code>
+，不匹配就输出<code>Wrong</code>。</p>
+<h4 id="题解">题解</h4>
+<p>这题是最简单的括号配对问题。伪代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (左括号) &#123;</span><br><span class="line">	入栈;</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="string">&#x27;)&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (栈顶不为<span class="string">&#x27;(&#x27;</span>)</span><br><span class="line">        结束程序;</span><br><span class="line">    出栈;</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="string">&#x27;]&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (栈顶不为<span class="string">&#x27;[&#x27;</span>)</span><br><span class="line">        结束程序;</span><br><span class="line">    出栈;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>C++ 代码：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">1</span> &lt;&lt; <span class="number">8</span>;</span><br><span class="line"><span class="type">int</span> tp;</span><br><span class="line"><span class="type">char</span> s[N], stk[N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%s&quot;</span>, s);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; s[i]; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (s[i]==<span class="string">&#x27;(&#x27;</span> <span class="keyword">or</span> s[i]==<span class="string">&#x27;[&#x27;</span>) &#123;</span><br><span class="line">            stk[++tp] = s[i];</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (s[i] == <span class="string">&#x27;)&#x27;</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (stk[tp] != <span class="string">&#x27;(&#x27;</span>) &#123;</span><br><span class="line">                <span class="built_in">puts</span>(<span class="string">&quot;Wrong&quot;</span>);</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            tp--;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (s[i] == <span class="string">&#x27;]&#x27;</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (stk[tp] != <span class="string">&#x27;[&#x27;</span>) &#123;</span><br><span class="line">                <span class="built_in">puts</span>(<span class="string">&quot;Wrong&quot;</span>);</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            tp--;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (tp) <span class="built_in">puts</span>(<span class="string">&quot;Wrong&quot;</span>);</span><br><span class="line">    <span class="keyword">else</span> <span class="built_in">puts</span>(<span class="string">&quot;OK&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="括号配对问题-difficult">括号配对问题 / Difficult</h4>
+<p>字符串中只含有括号
+(),[],&lt;&gt;,{},判断输入的字符串中括号是否匹配。如果括号有互相包含的形式，从内到外必须是&lt;&gt;,(),[],{}，例如。输入:
+[()] 输出 <code>YES</code>，而输入([])，([)]都应该输出
+<code>NO</code>。</p>
+<p>PS. 本题为多组输入输出</p>
+<h4 id="题解-1">题解</h4>
+<p>本题比上题难，主要难在两点：</p>
+<ol type="1">
+<li>括号种类 <span class="math inline">\(2\)</span> 个增至 ==<span
+class="math inline">\(4\)</span>== 个</li>
+<li>引入==优先级==</li>
+</ol>
+<p>其中，第一个难点可以通过定义字符串解决，第二个难点可以通过函数解决。题目整体难度不算大。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">260</span>;</span><br><span class="line"><span class="type">int</span> n, stk[N] = &#123;<span class="number">8</span>&#125;;</span><br><span class="line">string s, priority = <span class="string">&quot;&lt;&gt;()[]&#123;&#125;&quot;</span>;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">get_pre</span><span class="params">(<span class="type">char</span> c)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; priority.<span class="built_in">size</span>(); i++)</span><br><span class="line">        <span class="keyword">if</span> (priority[i] == c)</span><br><span class="line">            <span class="keyword">return</span> i;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">    cin.<span class="built_in">tie</span>(<span class="number">0</span>); cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">    cin &gt;&gt; n;</span><br><span class="line">    <span class="keyword">while</span> (n--) &#123;</span><br><span class="line">        <span class="type">int</span> tp = <span class="number">0</span>;</span><br><span class="line">        cin &gt;&gt; s;</span><br><span class="line">        s = <span class="string">&#x27; &#x27;</span> + s;</span><br><span class="line">        <span class="type">int</span> i, pre, len = s.<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= len; i++) &#123;</span><br><span class="line">            pre = <span class="built_in">get_pre</span>(s[i]);</span><br><span class="line">            <span class="keyword">if</span> ((pre &amp; <span class="number">1</span>) == <span class="literal">false</span>) &#123; <span class="comment">// 左括号</span></span><br><span class="line">                <span class="keyword">if</span> (stk[tp] &gt; pre) &#123;</span><br><span class="line">                    stk[++tp] = pre + <span class="number">1</span>; <span class="comment">// 压入右括号(技巧)</span></span><br><span class="line">                &#125; <span class="keyword">else</span> &#123; <span class="comment">// 优先级错误</span></span><br><span class="line">                    <span class="built_in">puts</span>(<span class="string">&quot;NO&quot;</span>);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (stk[tp] != pre) &#123; <span class="comment">// 括号不匹配</span></span><br><span class="line">                    <span class="built_in">puts</span>(<span class="string">&quot;NO&quot;</span>);</span><br><span class="line">                    <span class="keyword">break</span>; </span><br><span class="line">                &#125; <span class="keyword">else</span> &#123; <span class="comment">// 弹栈</span></span><br><span class="line">                    tp--;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (i &lt; len) <span class="keyword">continue</span>; <span class="comment">// 已经 puts(&quot;NO&quot;);</span></span><br><span class="line">        <span class="keyword">if</span> (tp != <span class="number">1</span>) <span class="built_in">puts</span>(<span class="string">&quot;NO&quot;</span>); <span class="comment">// 有多余括号</span></span><br><span class="line">        <span class="keyword">else</span> <span class="built_in">puts</span>(<span class="string">&quot;YES&quot;</span>); <span class="comment">// 完全匹配且优先级正确</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="简易计算器">简易计算器</h4>
+<p>小明在你的帮助下，破密了Ferrari设的密码门，正要往前走，突然又出现了一个密码门，门上有一个算式，其中只有“(”，“)”，“0-9”，“+”，“-”，“*”，“/”，“^”，求出的值就是密码。小明数学学得不好，还需你帮他的忙。(“/”用整数除法，"^"是幂运算，<code>2^3</code>
+为 8)</p>
+<p>PS. 输入保证合法</p>
+<h4 id="题解-2">题解</h4>
+<p>读者可以先尝试这道题：<a
+href="https://www.luogu.com.cn/problem/P1981">洛谷_P1981 [NOIP2013
+普及组] 表达式求值</a></p>
+<p>本题是⌈表达式求值⌋的进阶版，具有一定的难度。</p>
+<p>这题中，有如下运算符：<code>(</code>，<code>)</code>，<code>+</code>，<code>-</code>，<code>*</code>，<code>/</code>，<code>^</code>。由幼儿园知识易得，括号的运算优先级是最高的。所以，当我们遇到右括号时，就意味着从与它配对的左括号到它没有一个优先级比它高，这样就可以心安理得地弹栈并计算了。</p>
+<p>那如果遇到了运算符呢？同理，不停弹栈并计算，直至栈顶运算符优先级比它高为止。</p>
+<p>本题核心思想伪代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (左括号) &#123;</span><br><span class="line">    将左括号压进符号栈;</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (右括号) &#123;</span><br><span class="line">    弹栈并计算;</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (数) &#123;</span><br><span class="line">    将其压进数字栈;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123; <span class="comment">// 即除括号外其他运算符</span></span><br><span class="line">    弹栈直至栈顶运算符的优先级高于当前运算符的优先级;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>C++ 代码：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cmath&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cctype&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">39</span>;</span><br><span class="line"><span class="type">char</span> s[N] = <span class="string">&quot;(&quot;</span>, stkc[N];</span><br><span class="line"><span class="type">int</span> stk[N], tp, tpc;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="type">int</span> <span class="title">pre</span><span class="params">(<span class="type">char</span> op)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (op==<span class="string">&#x27;+&#x27;</span> <span class="keyword">or</span> op==<span class="string">&#x27;-&#x27;</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (op==<span class="string">&#x27;*&#x27;</span> <span class="keyword">or</span> op==<span class="string">&#x27;/&#x27;</span>) <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">if</span> (op==<span class="string">&#x27;^&#x27;</span>) <span class="keyword">return</span> <span class="number">3</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">calc</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> x = stk[tp--], y = stk[tp--];</span><br><span class="line">    <span class="keyword">switch</span> (stkc[tpc--]) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&#x27;+&#x27;</span>: y += x; <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&#x27;-&#x27;</span>: y -= x; <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&#x27;*&#x27;</span>: y *= x; <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&#x27;/&#x27;</span>: y /= x; <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&#x27;^&#x27;</span>: y = <span class="built_in">pow</span>(y, x); <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    stk[++tp] = y;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">read</span><span class="params">(<span class="type">int</span> &amp;cur)</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> ans = <span class="number">0</span>;</span><br><span class="line">    <span class="type">bool</span> neg = <span class="literal">false</span>;</span><br><span class="line">    <span class="type">char</span> c = s[cur];</span><br><span class="line">    <span class="keyword">if</span> (c == <span class="string">&#x27;-&#x27;</span>) neg = <span class="literal">true</span>, ++cur;</span><br><span class="line">    <span class="keyword">while</span> (<span class="built_in">isdigit</span>(s[cur])) ans = ans * <span class="number">10</span> + s[cur++] - <span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">    cur--;</span><br><span class="line">    <span class="keyword">return</span> neg ? -ans : ans;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%s&quot;</span>, s + <span class="number">1</span>);</span><br><span class="line">    s[<span class="built_in">strlen</span>(s)] = <span class="string">&#x27;)&#x27;</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; s[i]; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (s[i] == <span class="string">&#x27;(&#x27;</span>) &#123;</span><br><span class="line">            stkc[++tpc] = <span class="string">&#x27;(&#x27;</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (s[i] == <span class="string">&#x27;)&#x27;</span>) &#123;</span><br><span class="line">            <span class="keyword">while</span> (stkc[tpc] != <span class="string">&#x27;(&#x27;</span>) <span class="built_in">calc</span>();</span><br><span class="line">            tpc--;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">isdigit</span>(s[i]) <span class="built_in">or</span> (s[i]==<span class="string">&#x27;-&#x27;</span> <span class="keyword">and</span> s[i<span class="number">-1</span>]==<span class="string">&#x27;(&#x27;</span>)) &#123; <span class="comment">// 特别注意处理负数</span></span><br><span class="line">            stk[++tp] = <span class="built_in">read</span>(i);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">while</span> (<span class="built_in">pre</span>(s[i]) &lt;= <span class="built_in">pre</span>(stkc[tpc])) <span class="built_in">calc</span>();</span><br><span class="line">            stkc[++tpc] = s[i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, stk[tp]);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="逆波兰表达式">逆波兰表达式</h4>
+<p>逆波兰记法中，操作符置于操作数的后面。例如表达“三加四”时，写作“3 4
++”，而不是“3 +
+4”。如果有多个操作符，操作符置于第二个操作数的后面，所以常规中缀记法的“3
+- 4 + 5”在逆波兰记法中写作3 4 - 5 +”：先3减去4，再加上5。</p>
+<p>使用逆波兰记法的一个好处是不需要使用括号。</p>
+<p>PS. 保证式子正确，运算符只包括
+加<code>+</code>、减<code>-</code>、乘<code>*</code>、除<code>/</code></p>
+<p>PS. 输出一个浮点数，保留两位有效数字</p>
+<h4 id="题解-3">题解</h4>
+<p>按说这题比上题简单，因为没有什么乱七八糟的优先级问题。例如
+<code>1 2 + 3 *</code>，当栈中有已经两个数，且当前字符为运算符，就
+calc，否则继续压栈。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stack&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">stack &lt;<span class="type">double</span>&gt; stk;</span><br><span class="line"><span class="type">char</span> s[<span class="number">1009</span>], ch[<span class="number">109</span>];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">calc</span><span class="params">(<span class="type">char</span> c)</span> </span>&#123;</span><br><span class="line">	<span class="type">double</span> x = stk.<span class="built_in">top</span>(); stk.<span class="built_in">pop</span>();</span><br><span class="line">	<span class="type">double</span> y = stk.<span class="built_in">top</span>(); stk.<span class="built_in">pop</span>();</span><br><span class="line">	<span class="keyword">switch</span> (c) &#123;</span><br><span class="line">		<span class="keyword">case</span> <span class="string">&#x27;+&#x27;</span>: y += x; <span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> <span class="string">&#x27;-&#x27;</span>: y -= x; <span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> <span class="string">&#x27;*&#x27;</span>: y *= x; <span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> <span class="string">&#x27;/&#x27;</span>: y /= x; <span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	stk.<span class="built_in">push</span>(y);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="type">int</span> cur = <span class="number">0</span>;</span><br><span class="line">	cin.<span class="built_in">getline</span>(s, <span class="number">1009</span>);</span><br><span class="line">	s[<span class="built_in">strlen</span>(s)] = <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; s[i]; i++) &#123;</span><br><span class="line">		<span class="keyword">if</span> (s[i] == <span class="string">&#x27; &#x27;</span>) <span class="keyword">continue</span>;</span><br><span class="line">		<span class="keyword">while</span> ((s[i] &gt;= <span class="string">&#x27;0&#x27;</span> <span class="keyword">and</span> s[i] &lt;= <span class="string">&#x27;9&#x27;</span>) <span class="keyword">or</span> s[i] == <span class="string">&#x27;.&#x27;</span> <span class="built_in">or</span> (s[i] == <span class="string">&#x27;-&#x27;</span> <span class="keyword">and</span> <span class="built_in">isdigit</span>(s[i+<span class="number">1</span>]))) </span><br><span class="line">            ch[cur++] = s[i++];</span><br><span class="line">		<span class="keyword">if</span> (<span class="built_in">isdigit</span>(ch[<span class="number">0</span>]) <span class="keyword">or</span> ch[<span class="number">0</span>] == <span class="string">&#x27;-&#x27;</span>) stk.<span class="built_in">push</span>(<span class="built_in">atof</span>(ch));</span><br><span class="line">		<span class="keyword">else</span> <span class="built_in">calc</span>(s[i]);</span><br><span class="line">		cur = <span class="number">0</span>;</span><br><span class="line">		<span class="built_in">memset</span>(ch, <span class="number">0</span>, <span class="built_in">sizeof</span>(ch));  </span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;%.2f&quot;</span>, stk.<span class="built_in">top</span>());</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>PS. 这个代码是以前写的，码风与其他代码不太一致，敬请谅解。</p>
+<h4 id="拓展-系统栈">拓展 / 系统栈</h4>
+<p>利用递归写一个 <span class="math inline">\(10\)</span> 进制转 <span
+class="math inline">\(2\)</span> 进制的程序。</p>
+<p>这个程序大家都会写：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">trans</span><span class="params">(<span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (n) &#123;</span><br><span class="line">        <span class="built_in">trans</span>(n &gt;&gt; <span class="number">1</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, n &amp; <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>模拟将数 <span class="math inline">\(10\)</span> 转为 <span
+class="math inline">\(2\)</span> 进制的过程：</p>
+<figure>
+<img src="https://s2.loli.net/2022/05/17/bBdC19Mfqza6nUK.png"
+alt="ten2two" />
+<figcaption aria-hidden="true">ten2two</figcaption>
+</figure>
+<p>由上图，递归与回溯的过程其实就是压栈与弹栈。所以所有的 <span
+class="math inline">\(DFS\)</span> 都可以用栈来解决。</p>
+<p>下一篇文章将讲解 <span class="math inline">\(DFS\)</span></p>
+]]></content>
+      <tags>
+        <tag>数据结构, C++, 算法</tag>
+      </tags>
+  </entry>
 </search>
