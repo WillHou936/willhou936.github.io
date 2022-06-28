@@ -15,6 +15,8 @@
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
+
+
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
@@ -264,39 +266,24 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h3 id="题目描述">题目描述</h3>
-<p>Venn有一个数列<span
-class="math inline">\(a_1,a_2,...,a_n\)</span>.有一天，BLUESKY007拿来了一个正整数<span
-class="math inline">\(X\)</span>。Venn是一个特别喜欢异或(xor)运算的孩子，她也很喜欢BLUESKY007。于是，Venn就想知道，自己能找到多少对数(i,j)能够满足<span
-class="math inline">\(a_i \ xor \ a_j = X\)</span>. 两个数对<span
-class="math inline">\((i_1,j_1)\)</span>与<span
-class="math inline">\((i_2,j_2)\)</span>不同，当且仅当<span
-class="math inline">\(i_1 \neq i_2\)</span>或者<span
-class="math inline">\(j_1 \neq j_2\)</span>。</p>
-<h3 id="思路">思路</h3>
-<p>这题暴力肯定要超时（50分）。固要用二分查找。</p>
-<h3 id="解析">解析</h3>
-<p>这道题除了用上面的算法外，还有一个比较容易理解的方法，详见代码。</p>
-<p>这道题首先需要知道一个性质: 如果 <code>a ^ b = c</code>, 则
-<code>a ^ c = b</code>, <code>b ^ c = a</code>.</p>
+        <h3 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h3><p>Venn有一个数列$a_1,a_2,…,a_n$.有一天，BLUESKY007拿来了一个正整数$X$。Venn是一个特别喜欢异或(xor)运算的孩子，她也很喜欢BLUESKY007。于是，Venn就想知道，自己能找到多少对数(i,j)能够满足$a_i \ xor \ a_j = X$. 两个数对$(i_1,j_1)$与$(i_2,j_2)$不同，当且仅当$i_1 \neq i_2$或者$j_1 \neq j_2$。</p>
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>这题暴力肯定要超时（50分）。固要用二分查找。</p>
+<h3 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h3><p>这道题除了用上面的算法外，还有一个比较容易理解的方法，详见代码。</p>
+<p>这道题首先需要知道一个性质:<br>如果 <code>a ^ b = c</code>, 则 <code>a ^ c = b</code>, <code>b ^ c = a</code>.</p>
 <p><strong>不知道这个性质, 这道题西奈.</strong></p>
-<p>当你有一个有序数组, 应该怎样快速的判断这个数组里有多少个值等于 x
-的数呢?</p>
-<p>eg. <code>a[] = &#123;1, 2, 4, 5, 5, 6, 6, 10, 23, 74&#125;;</code> 且数组长度
-n = 10, 你要查询这个数组里出现了多少次 x = 5.</p>
-<p>先求出第一个大于 x 的数的地址, 再求出第一个大于等于 x 的数的地址,
-两者相减就是答案. 即： <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ans = std::<span class="built_in">upper_bound</span>(a, a+n, x) - std::<span class="built_in">lower_bound</span>(a, a+n, x);</span><br></pre></td></tr></table></figure> 那么有同学要问了:
-<code>std::upper_bound</code> 和 <code>std::lower_bound</code>
-不是返回地址吗?</p>
-<p>Answer: <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> (std::upper_bound(a, a+n, x) - a) - (std::lower_bound(a, a+n, x) - a)</span><br><span class="line">=std::upper_bound(a, a+n, x) - a - std::lower_bound(a, a+n, x) + a // 两个 a 抵消, 得</span><br><span class="line">=std::upper_bound(a, a+n, x) - std::lower_bound(a, a+n, x)</span><br></pre></td></tr></table></figure></p>
-<p>时间复杂度为 <span class="math inline">\(O(log n) \ll
-O(n)\)</span>.</p>
+<p>当你有一个有序数组, 应该怎样快速的判断这个数组里有多少个值等于 x 的数呢?</p>
+<p>eg. <code>a[] = &#123;1, 2, 4, 5, 5, 6, 6, 10, 23, 74&#125;;</code> 且数组长度 n = 10, 你要查询这个数组里出现了多少次 x = 5.</p>
+<p>先求出第一个大于 x 的数的地址, 再求出第一个大于等于 x 的数的地址, 两者相减就是答案. 即：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ans = std::<span class="built_in">upper_bound</span>(a, a+n, x) - std::<span class="built_in">lower_bound</span>(a, a+n, x);</span><br></pre></td></tr></table></figure>
+<p>那么有同学要问了: <code>std::upper_bound</code> 和 <code>std::lower_bound</code> 不是返回地址吗?</p>
+<p>Answer:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> (std::upper_bound(a, a+n, x) - a) - (std::lower_bound(a, a+n, x) - a)</span><br><span class="line">=std::upper_bound(a, a+n, x) - a - std::lower_bound(a, a+n, x) + a // 两个 a 抵消, 得</span><br><span class="line">=std::upper_bound(a, a+n, x) - std::lower_bound(a, a+n, x)</span><br></pre></td></tr></table></figure>
+
+<p>时间复杂度为 $O(log n) \ll O(n)$.</p>
 <p><strong>不知道这个性质, 这道题西奈.</strong></p>
-<p>这道题还有一个比较坑的, 就是时限太小.
-所以你必须手写排序或者手写二分以提高效率.</p>
+<p>这道题还有一个比较坑的, 就是时限太小. 所以你必须手写排序或者手写二分以提高效率.</p>
 <p><strong>不知道这一点, 这道题西奈.</strong></p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="keyword">typedef</span> <span class="type">long</span> <span class="type">long</span> LL;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">1e6</span> + <span class="number">9</span>;</span><br><span class="line"><span class="type">int</span> n, x, a[N];</span><br><span class="line"><span class="type">int</span> b[N], c[<span class="number">260</span>];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">rsort</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> k = <span class="number">0</span>; k &lt; <span class="number">32</span>; k += <span class="number">8</span>) &#123;</span><br><span class="line">        <span class="built_in">memset</span>(c, <span class="number">0</span>, <span class="keyword">sizeof</span> c);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i) ++c[a[i]&gt;&gt;k &amp; <span class="number">0xFF</span>];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">0xFF</span>; ++i) c[i] += c[i<span class="number">-1</span>];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = n; i; --i) &#123;</span><br><span class="line">            <span class="type">int</span> t = a[i]&gt;&gt;k &amp; <span class="number">0xFF</span>;</span><br><span class="line">            b[c[t]--] = a[i];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">memcpy</span>(a+<span class="number">1</span>, b+<span class="number">1</span>, n*<span class="built_in">sizeof</span>(<span class="type">int</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d%d&quot;</span>, &amp;n, &amp;x);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, a + i);</span><br><span class="line">    <span class="built_in">rsort</span>();</span><br><span class="line">    LL ans = <span class="number">0</span>, last = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (a[i] == a[i<span class="number">-1</span>]) &#123;</span><br><span class="line">            ans += last;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> t = a[i] ^ x;</span><br><span class="line">        last = std::<span class="built_in">upper_bound</span>(a+<span class="number">1</span>, a+n+<span class="number">1</span>, t) - std::<span class="built_in">lower_bound</span>(a+<span class="number">1</span>, a+n+<span class="number">1</span>, t);</span><br><span class="line">        ans += last;</span><br><span class="line">        <span class="comment">// printf(&quot;when i=%d, last=%d\n&quot;, i, last);</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%lld&quot;</span>, ans);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
     </div>
 
     

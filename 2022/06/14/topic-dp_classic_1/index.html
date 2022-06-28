@@ -15,6 +15,8 @@
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
+
+
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
@@ -33,8 +35,8 @@
 <meta property="article:published_time" content="2022-06-14T08:49:50.000Z">
 <meta property="article:modified_time" content="2022-06-27T09:34:49.216Z">
 <meta property="article:author" content="Will Hou">
-<meta property="article:tag" content="动态规划">
 <meta property="article:tag" content="C++">
+<meta property="article:tag" content="动态规划">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://s2.loli.net/2022/04/28/mJtfTwPcKzCvS9V.png">
 
@@ -268,175 +270,86 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h3 id="对抗赛compete">1. 对抗赛(compete)</h3>
-<h4 id="题目描述">题目描述</h4>
-<p>程序设计对抗赛设有 <span class="math inline">\(N\)</span> (<span
-class="math inline">\(0\lt N\lt
-50\)</span>的整数)个价值互不相同的奖品，每个奖品的价值分别为 <span
-class="math inline">\(S_1，S_2，S_3\dots S_n\)</span>(均为不超过 <span
-class="math inline">\(100\)</span>
-的正整数)。现将它们分给甲乙两队，为了使得甲乙两队得到相同价值的奖品，必须将这
-<span class="math inline">\(N\)</span> 个奖品分成总价值相等的两组。</p>
-<p>编程要求：对给定 <span class="math inline">\(N\)</span> 及 <span
-class="math inline">\(N\)</span> 个奖品的价值，求出将这 <span
-class="math inline">\(N\)</span>
-个奖品分成价值相等的两组，共有多少种分法？</p>
-<p>例如：<span class="math inline">\(N = 5，S_1，S_2，S_3\dots
-S_n\)</span> 分别为 <span
-class="math inline">\(1，3，5，8，9\)</span></p>
-<p>则可分为 <span class="math inline">\(\{1，3，9\}\)</span> 与 <span
-class="math inline">\(\{5，8\}\)</span></p>
-<p>仅有 <span class="math inline">\(1\)</span> 种分法；</p>
-<p>例如：<span class="math inline">\(N = 7，S_1，S_2，S_3\dots
-S_n\)</span> 分别为 <span
-class="math inline">\(1，2，3，4，5，6，7\)</span></p>
+        <h3 id="1-对抗赛-compete"><a href="#1-对抗赛-compete" class="headerlink" title="1. 对抗赛(compete)"></a>1. 对抗赛(compete)</h3><h4 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h4><p>程序设计对抗赛设有 $N$ ($0\lt N\lt 50$的整数)个价值互不相同的奖品，每个奖品的价值分别为 $S_1，S_2，S_3\dots S_n$(均为不超过 $100$ 的正整数)。现将它们分给甲乙两队，为了使得甲乙两队得到相同价值的奖品，必须将这 $N$ 个奖品分成总价值相等的两组。</p>
+<p>编程要求：对给定 $N$ 及 $N$ 个奖品的价值，求出将这 $N$ 个奖品分成价值相等的两组，共有多少种分法？</p>
+<p>例如：$N = 5，S_1，S_2，S_3\dots S_n$ 分别为 $1，3，5，8，9$</p>
+<p>则可分为 ${1，3，9}$ 与 ${5，8}$</p>
+<p>仅有 $1$ 种分法；</p>
+<p>例如：$N = 7，S_1，S_2，S_3\dots S_n$ 分别为 $1，2，3，4，5，6，7$</p>
 <p>则可分为：</p>
-<p><span class="math inline">\(\{1,6,7\}\)</span> 与 <span
-class="math inline">\(\{2,3,4,5\}\)</span></p>
-<p><span class="math inline">\(\{2,5,7\}\)</span> 与 <span
-class="math inline">\(\{1,3,4,6\}\)</span></p>
-<p><span class="math inline">\(\{3,4,7\}\)</span> 与 <span
-class="math inline">\(\{1,2,5,6\}\)</span></p>
-<p><span class="math inline">\(\{1,2,4,7\}\)</span> 与 <span
-class="math inline">\(\{3,5,6\}\)</span></p>
-<p>有 <span class="math inline">\(4\)</span> 种分法。</p>
-<h4 id="输入格式">输入格式</h4>
-<p>输入包含 <span class="math inline">\(N\)</span> 及 <span
-class="math inline">\(S_1，S_2，S_3\dots
-S_n\)</span>。（每两个相邻的数据之间有一个空格隔开）。</p>
-<h4 id="输出格式">输出格式</h4>
-<p>输出包含一个整数，表示多少种分法的答案，数据若无解，则输出 <span
-class="math inline">\(0\)</span>。</p>
-<h4 id="解法分析">解法分析</h4>
-<p>这题数据范围很小，所以写 dfs 都可以 AC。先上最好理解的 dfs:</p>
+<p>${1,6,7}$ 与 ${2,3,4,5}$</p>
+<p>${2,5,7}$ 与 ${1,3,4,6}$</p>
+<p>${3,4,7}$ 与 ${1,2,5,6}$</p>
+<p>${1,2,4,7}$ 与 ${3,5,6}$</p>
+<p>有 $4$ 种分法。</p>
+<h4 id="输入格式"><a href="#输入格式" class="headerlink" title="输入格式"></a>输入格式</h4><p>输入包含 $N$ 及 $S_1，S_2，S_3\dots S_n$。（每两个相邻的数据之间有一个空格隔开）。</p>
+<h4 id="输出格式"><a href="#输出格式" class="headerlink" title="输出格式"></a>输出格式</h4><p>输出包含一个整数，表示多少种分法的答案，数据若无解，则输出 $0$。</p>
+<h4 id="解法分析"><a href="#解法分析" class="headerlink" title="解法分析"></a>解法分析</h4><p>这题数据范围很小，所以写 dfs 都可以 AC。先上最好理解的 dfs:</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">59</span>;</span><br><span class="line"><span class="type">int</span> n, sum, ans, a[N];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> cur, <span class="type">int</span> sub)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (cur &gt; (sum &gt;&gt; <span class="number">1</span>))</span><br><span class="line">        <span class="keyword">return</span> ;</span><br><span class="line">    <span class="keyword">if</span> (cur == (sum &gt;&gt; <span class="number">1</span>)) &#123;</span><br><span class="line">        ans++;</span><br><span class="line">        <span class="keyword">return</span> ;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = sub; i &lt;= n; i++)</span><br><span class="line">        <span class="built_in">dfs</span>(cur+a[i], i+<span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;n);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, a + i), sum += a[i];</span><br><span class="line">    <span class="keyword">if</span> (sum &amp; <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="built_in">puts</span>(<span class="string">&quot;0&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">dfs</span>(a[<span class="number">1</span>], <span class="number">2</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, ans);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>dp 解法：不难看出，此题是一道 <strong>01背包</strong>
-的求方案数类问题。每个奖品有<strong>选</strong>或者<strong>不选</strong>两种操作。</p>
+
+<p>dp 解法：不难看出，此题是一道 <strong>01背包</strong> 的求方案数类问题。每个奖品有<strong>选</strong>或者<strong>不选</strong>两种操作。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">5007</span>, M = <span class="number">50</span>;</span><br><span class="line"><span class="comment">// f[i] 表示当 sum=i 时有多少种分法</span></span><br><span class="line"><span class="type">int</span> f[N], a[M];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="type">int</span> n, sum = <span class="number">0</span>;</span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;n);</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">		<span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, a + i), sum += a[i];</span><br><span class="line">	<span class="keyword">if</span> (sum &amp; <span class="number">1</span>) &#123; <span class="built_in">puts</span>(<span class="string">&quot;0&quot;</span>); <span class="keyword">return</span> <span class="number">0</span>; &#125;</span><br><span class="line">	sum &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">	f[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">		<span class="keyword">for</span> (<span class="type">int</span> j = sum; j &gt;= a[i]; j--)</span><br><span class="line">			f[j] += f[j-a[i]];</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, f[sum]&gt;&gt;<span class="number">1</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="演讲大厅安排hall">2. 演讲大厅安排(hall)</h3>
-<h4 id="题目描述-1">题目描述</h4>
-<p>有一个演讲大厅需要我们管理，演讲者们事先定好了需要演讲的起始时间和中止时间。我们想让演讲大厅得到最大可能的使用。我们要接受一些预定而拒绝其他的预定，目标是使演讲者使用大厅的时间最长。假设在某一时刻一个演讲结束，另一个演讲就可以立即开始。</p>
+
+<h3 id="2-演讲大厅安排-hall"><a href="#2-演讲大厅安排-hall" class="headerlink" title="2. 演讲大厅安排(hall)"></a>2. 演讲大厅安排(hall)</h3><h4 id="题目描述-1"><a href="#题目描述-1" class="headerlink" title="题目描述"></a>题目描述</h4><p>有一个演讲大厅需要我们管理，演讲者们事先定好了需要演讲的起始时间和中止时间。我们想让演讲大厅得到最大可能的使用。我们要接受一些预定而拒绝其他的预定，目标是使演讲者使用大厅的时间最长。假设在某一时刻一个演讲结束，另一个演讲就可以立即开始。</p>
 <p>【编程任务】</p>
-<ol type="1">
-<li><p>输入演讲者的申请。</p></li>
-<li><p>计算演讲大厅最大可能的使用时间。</p></li>
-<li><p>将结果输出。</p></li>
+<ol>
+<li><p>输入演讲者的申请。</p>
+</li>
+<li><p>计算演讲大厅最大可能的使用时间。</p>
+</li>
+<li><p>将结果输出。</p>
+</li>
 </ol>
-<h4 id="输入格式-1">输入格式</h4>
-<p>输入第一行为一个整数 <span
-class="math inline">\(N(N≤5000)\)</span>，表示申请的数目。</p>
-<p>以下 <span class="math inline">\(n\)</span> 行每行包含两个整数 <span
-class="math inline">\(p,k(1 ≤ p &lt; k ≤
-30000)\)</span>，表示这个申请的起始时间和中止时间。</p>
-<h4 id="输出格式-1">输出格式</h4>
-<p>输出包含一个整数，表示大厅最大可能的使用时间。</p>
-<h4 id="解法分析-1">解法分析</h4>
-<p><del>首先感谢出题人，latex用的少</del></p>
+<h4 id="输入格式-1"><a href="#输入格式-1" class="headerlink" title="输入格式"></a>输入格式</h4><p>输入第一行为一个整数 $N(N≤5000)$，表示申请的数目。</p>
+<p>以下 $n$ 行每行包含两个整数 $p,k(1 ≤ p &lt; k ≤ 30000)$，表示这个申请的起始时间和中止时间。</p>
+<h4 id="输出格式-1"><a href="#输出格式-1" class="headerlink" title="输出格式"></a>输出格式</h4><p>输出包含一个整数，表示大厅最大可能的使用时间。</p>
+<h4 id="解法分析-1"><a href="#解法分析-1" class="headerlink" title="解法分析"></a>解法分析</h4><p><del>首先感谢出题人，latex用的少</del></p>
 <p><strong>这题是一道经典的<a id="hall">线段覆盖问题</a>。</strong>这种问题的固定解法是：</p>
-<ol type="1">
+<ol>
 <li>通过结构体记录每一段线段的<strong>头</strong>和<strong>尾</strong></li>
 <li>按照<strong>尾</strong>从小到大排序</li>
 <li>使用 <strong>01背包</strong> 的解法解即可</li>
 </ol>
 <p>代码如下：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">1007</span>;</span><br><span class="line"><span class="type">int</span> f[N], a[N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> n, sum = <span class="number">0</span>;</span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;n);</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">		<span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, a + i), sum += a[i];</span><br><span class="line">	<span class="keyword">if</span> (sum &amp; <span class="number">1</span>) &#123; <span class="built_in">puts</span>(<span class="string">&quot;0&quot;</span>); <span class="keyword">return</span> <span class="number">0</span>; &#125;</span><br><span class="line">	sum &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">	f[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">		<span class="keyword">for</span> (<span class="type">int</span> j = sum; j &gt;= a[i]; j--)</span><br><span class="line">			f[j] += f[j-a[i]];</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, f[sum]&gt;&gt;<span class="number">1</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="火车票railway">3. 火车票(railway)</h3>
-<h4 id="题目描述-2">题目描述</h4>
-<p>从 Ekaterinburg 到 Sverdlovsk
-的火车线路上有若干个站点。这条线路可以近似的表示为一条线段，火车站就是线段上的点。线路始于
-Ekaterinburg ，终于 Sverdlovsk。Ekaterinburg 被标号为 <span
-class="math inline">\(1\)</span>，Sverdlovsk 被标号为 <span
-class="math inline">\(n\)</span>。（<span
-class="math inline">\(n\)</span> 为整条线路上的站点数）</p>
-<figure>
-<img src="https://s2.loli.net/2022/04/28/mJtfTwPcKzCvS9V.png"
-alt="image.png" />
-<figcaption aria-hidden="true">image.png</figcaption>
-</figure>
+
+<h3 id="3-火车票-railway"><a href="#3-火车票-railway" class="headerlink" title="3. 火车票(railway)"></a>3. 火车票(railway)</h3><h4 id="题目描述-2"><a href="#题目描述-2" class="headerlink" title="题目描述"></a>题目描述</h4><p>从 Ekaterinburg 到 Sverdlovsk 的火车线路上有若干个站点。这条线路可以近似的表示为一条线段，火车站就是线段上的点。线路始于 Ekaterinburg ，终于 Sverdlovsk。Ekaterinburg 被标号为 $1$，Sverdlovsk 被标号为 $n$。（$n$ 为整条线路上的站点数）</p>
+<p><img src="https://s2.loli.net/2022/04/28/mJtfTwPcKzCvS9V.png" alt="image.png"></p>
 <p>线路上的任意两个站点间的直达票价是由它们间的距离决定的，票价根据以下规则制定：</p>
-<figure>
-<img src="https://s2.loli.net/2022/04/28/goQezMNjHvAlypf.png"
-alt="f3b685001d.png" />
-<figcaption aria-hidden="true">f3b685001d.png</figcaption>
-</figure>
-<p>如果两站的间距超过 <span
-class="math inline">\(L_3\)</span>，则无直达车票。所以有时可能有必要买多张票，通过转车的方式，从一个站到达另一个站。</p>
-<p>例如，在上面的图中，有 <span class="math inline">\(7\)</span>
-个站点。<span class="math inline">\(2\)</span> 号站点到 <span
-class="math inline">\(6\)</span> 号站点的距离超过 <span
-class="math inline">\(L_3\)</span>，不能买直达票。存在若干种中转的方法，其中的一种是买两张票：先花费
-<span class="math inline">\(C_2\)</span> 从 <span
-class="math inline">\(2\)</span> 号站到达 <span
-class="math inline">\(3\)</span> 号站，然后花费 <span
-class="math inline">\(C_3\)</span> 从 <span
-class="math inline">\(3\)</span> 号站到 <span
-class="math inline">\(6\)</span> 号站，一种花费 <span
-class="math inline">\(C_2+C_3\)</span>。</p>
+<p><img src="https://s2.loli.net/2022/04/28/goQezMNjHvAlypf.png" alt="f3b685001d.png"></p>
+<p>如果两站的间距超过 $L_3$，则无直达车票。所以有时可能有必要买多张票，通过转车的方式，从一个站到达另一个站。</p>
+<p>例如，在上面的图中，有 $7$ 个站点。$2$ 号站点到 $6$ 号站点的距离超过 $L_3$，不能买直达票。存在若干种中转的方法，其中的一种是买两张票：先花费 $C_2$ 从 $2$ 号站到达 $3$ 号站，然后花费 $C_3$ 从 $3$ 号站到 $6$ 号站，一种花费 $C_2+C_3$。</p>
 <p>你的任务是，找出一种最经济的中转方案。</p>
-<h4 id="输入格式-2">输入格式</h4>
-<p>第一行 <span class="math inline">\(6\)</span> 个整数 <span
-class="math inline">\(L_1, L_2, L_3, C_1, C_2, C_3\ (1\le L_1\lt L_2\lt
-L_3\le 10^9, 1\le C_1\lt C_2\lt C3\le
-10^9)\)</span>，中间用空格分隔。</p>
-<p>第二行一个整数 <span class="math inline">\(n(2\le n\le
-100)\)</span>，表示线路上的车站数。</p>
-<p>第三行两个整数 <span class="math inline">\(s\)</span> 和 <span
-class="math inline">\(t\)</span>，分别是起点和终点的编号。注意：<span
-class="math inline">\(s\)</span> 不一定小于 <span
-class="math inline">\(t\)</span>。</p>
-<p>以下的 <span class="math inline">\(n-1\)</span> 行，按据 Ekaterinburg
-远近，每行描述了一个车站的位置。它包含一个整数，表示该车站距
-Ekaterinburg 的距离。</p>
-<p>任意两个车站的距离不超过 <span
-class="math inline">\(10^9\)</span>，任意两个相邻的车站的距离不超过
-<span class="math inline">\(L_3\)</span>。</p>
-<h4 id="输出格式-2">输出格式</h4>
-<p>一个整数，表示从给定的一个站到给定的另一个站的最小花费。</p>
-<h4 id="解法分析-2">解法分析</h4>
-<p>这道题是一道典型的 <a id="qujiandp"><strong>区间DP</strong></a>
-问题（可以把车站之间的距离看成一个物品）。</p>
+<h4 id="输入格式-2"><a href="#输入格式-2" class="headerlink" title="输入格式"></a>输入格式</h4><p>第一行 $6$ 个整数 $L_1, L_2, L_3, C_1, C_2, C_3\ (1\le L_1\lt L_2\lt L_3\le 10^9, 1\le C_1\lt C_2\lt C3\le 10^9)$，中间用空格分隔。</p>
+<p>第二行一个整数 $n(2\le n\le 100)$，表示线路上的车站数。</p>
+<p>第三行两个整数 $s$ 和 $t$，分别是起点和终点的编号。注意：$s$ 不一定小于 $t$。</p>
+<p>以下的 $n-1$ 行，按据 Ekaterinburg 远近，每行描述了一个车站的位置。它包含一个整数，表示该车站距 Ekaterinburg 的距离。</p>
+<p>任意两个车站的距离不超过 $10^9$，任意两个相邻的车站的距离不超过 $L_3$。</p>
+<h4 id="输出格式-2"><a href="#输出格式-2" class="headerlink" title="输出格式"></a>输出格式</h4><p>一个整数，表示从给定的一个站到给定的另一个站的最小花费。</p>
+<h4 id="解法分析-2"><a href="#解法分析-2" class="headerlink" title="解法分析"></a>解法分析</h4><p>这道题是一道典型的 <a id="qujiandp"><strong>区间DP</strong></a> 问题（可以把车站之间的距离看成一个物品）。</p>
 <p>区间 DP 套路：</p>
-<ol type="1">
-<li>定状态：<code>f[i][j]</code>表示从 <code>i~j</code>
-的区间（本题中表示从第 <code>i</code> 个车站到第 <code>j</code>
-个车站最少花费多少钱）。</li>
+<ol>
+<li>定状态：<code>f[i][j]</code>表示从 <code>i~j</code> 的区间（本题中表示从第 <code>i</code> 个车站到第 <code>j</code> 个车站最少花费多少钱）。</li>
 <li>状态转移方程：<code>f[i][j] = min(f[i][k] + f[k][j])</code></li>
 </ol>
 <p>区间 DP 模式：</p>
-<ol type="1">
-<li><p>从小区间推至大区间（核心）</p></li>
+<ol>
+<li><p>从小区间推至大区间（核心）</p>
+</li>
 <li><p>循环伪代码：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (区间长度) <span class="comment">// 通常循环变量为 i</span></span><br><span class="line">    <span class="keyword">for</span> (起点) &#123; <span class="comment">// 通常循环变量为 j</span></span><br><span class="line">        终点 = 起点 + 区间长度 - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (断点) <span class="comment">// 通常循环变量为 k</span></span><br><span class="line">            状态转移方程;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></li>
 </ol>
-<p>对于上面的代码，<span class="math inline">\(i,\ j,\ k\)</span>
-必须满足以下条件： <span class="math display">\[
-\begin{cases}
-k+1&gt;i \\
-[i, j] 的范围大于 [i, k],[k+1, j],因此要从小区间枚举到大区间
-\end{cases}
-\]</span> 由于在一般的 区间DP 的最小区间是 <span
-class="math inline">\(f[i][i]\)</span>，所以通常会将其初始化(例如
-<a href="#hebingshizi">合并石子</a>)。当然，在一些 区间DP
-的变式中，不一定这样初始化(例如本题)。</p>
+<p>对于上面的代码，$i,\ j,\ k$ 必须满足以下条件：<br>$$<br>\begin{cases}<br>k+1&gt;i \<br>[i, j] 的范围大于 [i, k],[k+1, j],因此要从小区间枚举到大区间<br>\end{cases}<br>$$<br>由于在一般的 区间DP 的最小区间是 $f[i][i]$，所以通常会将其初始化(例如 <a href="#hebingshizi">合并石子</a>)。当然，在一些 区间DP 的变式中，不一定这样初始化(例如本题)。</p>
 <p>本题代码：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="keyword">typedef</span> <span class="type">long</span> <span class="type">long</span> LL;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">109</span>, INF = <span class="number">0X3F3F3F3F3F3F3F3F</span>;</span><br><span class="line">LL f[N][N], L[N], C[N], loc[N];</span><br><span class="line"><span class="function">LL <span class="title">calc</span><span class="params">(LL s)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">3</span>; i++)</span><br><span class="line">		<span class="keyword">if</span> (s &lt;= L[i]) <span class="keyword">return</span> C[i];</span><br><span class="line">	<span class="keyword">return</span> INF;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">3</span>; i++)</span><br><span class="line">		<span class="built_in">scanf</span>(<span class="string">&quot;%lld&quot;</span>, L + i);</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">3</span>; i++)</span><br><span class="line">		<span class="built_in">scanf</span>(<span class="string">&quot;%lld&quot;</span>, C + i);</span><br><span class="line">	<span class="type">int</span> n, s, t;</span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">&quot;%d%d%d&quot;</span>, &amp;n, &amp;s, &amp;t);</span><br><span class="line">	<span class="built_in">memset</span>(f, <span class="number">0x3F</span>, <span class="keyword">sizeof</span> f);</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">2</span>; i &lt;= n; i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, loc + i);</span><br><span class="line">		f[i<span class="number">-1</span>][i] = <span class="built_in">calc</span>(loc[i] - loc[i<span class="number">-1</span>]);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (s &gt; t) std::<span class="built_in">swap</span>(s, t);</span><br><span class="line">	<span class="comment">// 区间 DP 第一层是枚举长度</span></span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> d = <span class="number">2</span>; d &lt;= n; d++)</span><br><span class="line">		<span class="comment">// 第二层枚举起点</span></span><br><span class="line">		<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i+d<span class="number">-1</span> &lt;= n; i++)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="type">int</span> j = i + d - <span class="number">1</span>;</span><br><span class="line">			f[i][j] = <span class="built_in">calc</span>(loc[j] - loc[i]);</span><br><span class="line">			<span class="keyword">for</span> (<span class="type">int</span> k = i+<span class="number">1</span>; k &lt; j; k++)</span><br><span class="line">				f[i][j] = std::<span class="built_in">min</span>(f[i][j], f[i][k]+f[k][j]);</span><br><span class="line">		&#125;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;%lld&quot;</span>, f[s][t]);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="单词的划分word">4. 单词的划分(word)</h3>
-<h4 id="题目描述-3">题目描述</h4>
-<p>有一个很长的由小写字母组成字符串。为了便于对这个字符串进行分析，需要将它划分成若干个部分，每个部分称为一个单词。出于减少分析量的目的，我们希望划分出的单词数越少越好。你就是来完成这一划分工作的。</p>
-<h4 id="输入格式-3">输入格式</h4>
-<p>第 <span class="math inline">\(1\)</span>
-行，一个字符串。（字符串的长度不超过 <span
-class="math inline">\(100\)</span>）</p>
-<p>第 <span class="math inline">\(2\)</span> 行一个整数 <span
-class="math inline">\(n\)</span>，表示单词的个数。（<span
-class="math inline">\(n&lt;=100\)</span>）</p>
-<p>第 <span class="math inline">\(3\sim n+2\)</span>
-行，每行列出一个单词。</p>
-<h4 id="输出格式-3">输出格式</h4>
-<p>一个整数，表示字符串可以被划分成的最少的单词数。</p>
-<h4 id="解法分析-3">解法分析</h4>
-<p>这题是一道背包问题。把背包问题要素整理出来得：</p>
-<ol type="1">
+
+<h3 id="4-单词的划分-word"><a href="#4-单词的划分-word" class="headerlink" title="4. 单词的划分(word)"></a>4. 单词的划分(word)</h3><h4 id="题目描述-3"><a href="#题目描述-3" class="headerlink" title="题目描述"></a>题目描述</h4><p>有一个很长的由小写字母组成字符串。为了便于对这个字符串进行分析，需要将它划分成若干个部分，每个部分称为一个单词。出于减少分析量的目的，我们希望划分出的单词数越少越好。你就是来完成这一划分工作的。</p>
+<h4 id="输入格式-3"><a href="#输入格式-3" class="headerlink" title="输入格式"></a>输入格式</h4><p>第 $1$ 行，一个字符串。（字符串的长度不超过 $100$）</p>
+<p>第 $2$ 行一个整数 $n$，表示单词的个数。（$n&lt;=100$）</p>
+<p>第 $3\sim n+2$ 行，每行列出一个单词。</p>
+<h4 id="输出格式-3"><a href="#输出格式-3" class="headerlink" title="输出格式"></a>输出格式</h4><p>一个整数，表示字符串可以被划分成的最少的单词数。</p>
+<h4 id="解法分析-3"><a href="#解法分析-3" class="headerlink" title="解法分析"></a>解法分析</h4><p>这题是一道背包问题。把背包问题要素整理出来得：</p>
+<ol>
 <li>背包容量：字符串长度</li>
 <li>物品数：单词个数</li>
 <li>物品价值：单词内容</li>
@@ -446,73 +359,31 @@ class="math inline">\(n&lt;=100\)</span>）</p>
 <p>由此可以知道，本题是一道 <strong>01背包</strong></p>
 <p>代码：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> std::string;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">107</span>;</span><br><span class="line">std::map &lt;string, <span class="type">bool</span>&gt; mp;</span><br><span class="line"><span class="type">int</span> f[N], n;</span><br><span class="line">string s, w;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="built_in">memset</span>(f, <span class="number">0x3F</span>, <span class="keyword">sizeof</span> f);</span><br><span class="line">	std::cin &gt;&gt; s &gt;&gt; n;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">	&#123;</span><br><span class="line">		std::cin &gt;&gt; w;</span><br><span class="line">		mp[w] = <span class="literal">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (mp[s.<span class="built_in">substr</span>(<span class="number">0</span>, <span class="number">1</span>)]) f[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">unsigned</span> i = <span class="number">1</span>; i &lt; s.<span class="built_in">size</span>(); i++)</span><br><span class="line">		<span class="keyword">for</span> (<span class="type">int</span> len = i+<span class="number">1</span>; len; len--)</span><br><span class="line">		&#123;</span><br><span class="line">			string ss = s.<span class="built_in">substr</span>(i+<span class="number">1</span>-len, len);</span><br><span class="line">			<span class="keyword">if</span> (mp[ss] == <span class="literal">false</span>) <span class="keyword">continue</span>;</span><br><span class="line">			<span class="keyword">if</span> (i+<span class="number">1</span>-len == <span class="number">0</span>) &#123; f[i] = <span class="number">1</span>; <span class="keyword">break</span>; &#125;</span><br><span class="line">			f[i] = std::<span class="built_in">min</span>(f[i], f[i-len]+<span class="number">1</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	std::cout &lt;&lt; f[s.<span class="built_in">size</span>()<span class="number">-1</span>];</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="饥饿的牛hunger">5. 饥饿的牛(hunger)</h3>
-<h4 id="题目描述-4">题目描述</h4>
-<p>牛在饲料槽前排好了队。饲料槽依次用 <span
-class="math inline">\(1\)</span> 到 <span class="math inline">\(N(1\le
-N\le 2000)\)</span>
-编号。每天晚上，一头幸运的牛根据约翰的规则，吃其中一些槽里的饲料。</p>
-<p>约翰提供 <span class="math inline">\(B\)</span><em>B</em>
-个区间的清单。一个区间是一对整数 <span
-class="math inline">\(start-end(1\le start\le end\le
-N)\)</span>，表示一些连续的饲料槽，比如 <span
-class="math inline">\(1\sim 3,7\sim 8,3\sim 4\)</span>
-等等。牛可以任意选择区间，但是牛选择的区间不能有重叠。</p>
+
+<h3 id="5-饥饿的牛-hunger"><a href="#5-饥饿的牛-hunger" class="headerlink" title="5. 饥饿的牛(hunger)"></a>5. 饥饿的牛(hunger)</h3><h4 id="题目描述-4"><a href="#题目描述-4" class="headerlink" title="题目描述"></a>题目描述</h4><p>牛在饲料槽前排好了队。饲料槽依次用 $1$ 到 $N(1\le N\le 2000)$ 编号。每天晚上，一头幸运的牛根据约翰的规则，吃其中一些槽里的饲料。</p>
+<p>约翰提供 $B$<em>B</em> 个区间的清单。一个区间是一对整数 $start-end(1\le start\le end\le N)$，表示一些连续的饲料槽，比如 $1\sim 3,7\sim 8,3\sim 4$ 等等。牛可以任意选择区间，但是牛选择的区间不能有重叠。</p>
 <p>当然，牛希望自己能够吃得越多越好。给出一些区间，帮助这只牛找一些区间，使它能吃到最多的东西。</p>
-<p>在上面的例子中，<span class="math inline">\(1\sim 3\)</span> 和 <span
-class="math inline">\(3\sim 4\)</span> 是重叠的；聪明的牛选择 <span
-class="math inline">\(\{1\sim3，7\sim 8\}\)</span>，这样可以吃到 <span
-class="math inline">\(5\)</span> 个槽里的东西。</p>
-<h4 id="输入格式-4">输入格式</h4>
-<p>第 <span class="math inline">\(1\)</span> 行，整数 <span
-class="math inline">\(B(1\le B\le 1000)\)</span>。</p>
-<p>第 <span class="math inline">\(2\sim B+1\)</span>
-行，每行两个整数，表示一个区间，较小的端点在前面。</p>
-<h4 id="输出格式-4">输出格式</h4>
-<p>仅一个整数，表示最多能吃到多少个槽里的食物。</p>
-<h4 id="解法分析-4">解法分析</h4>
-<p>这又是一道线段覆盖问题，分析见
-<a href="#hall">演讲大厅安排(hall)</a></p>
+<p>在上面的例子中，$1\sim 3$ 和 $3\sim 4$ 是重叠的；聪明的牛选择 ${1\sim3，7\sim 8}$，这样可以吃到 $5$ 个槽里的东西。</p>
+<h4 id="输入格式-4"><a href="#输入格式-4" class="headerlink" title="输入格式"></a>输入格式</h4><p>第 $1$ 行，整数 $B(1\le B\le 1000)$。</p>
+<p>第 $2\sim B+1$ 行，每行两个整数，表示一个区间，较小的端点在前面。</p>
+<h4 id="输出格式-4"><a href="#输出格式-4" class="headerlink" title="输出格式"></a>输出格式</h4><p>仅一个整数，表示最多能吃到多少个槽里的食物。</p>
+<h4 id="解法分析-4"><a href="#解法分析-4" class="headerlink" title="解法分析"></a>解法分析</h4><p>这又是一道线段覆盖问题，分析见 <a href="#hall">演讲大厅安排(hall)</a></p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">2009</span>;</span><br><span class="line"><span class="type">int</span> b, f[N];</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Node</span> &#123;</span><br><span class="line">    <span class="type">int</span> st, ed;</span><br><span class="line">&#125; feed[N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;b);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= b; i++)</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%d%d&quot;</span>, &amp;feed[i].st, &amp;feed[i].ed);</span><br><span class="line">    std::<span class="built_in">sort</span>(feed + <span class="number">1</span>, feed + b + <span class="number">1</span>, [](<span class="type">const</span> Node &amp;a, <span class="type">const</span> Node &amp;b) &#123;</span><br><span class="line">        <span class="keyword">return</span> a.ed&lt;b.ed <span class="built_in">or</span> (a.ed==b.ed <span class="keyword">and</span> a.st&lt;b.st);</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="type">int</span> m = feed[b].ed;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= b; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = m; j &gt;= feed[i].ed; j--)</span><br><span class="line">            f[j] = std::<span class="built_in">max</span>(f[j], f[feed[i].st<span class="number">-1</span>] + feed[i].ed - feed[i].st + <span class="number">1</span>);</span><br><span class="line">        <span class="comment">// for (int j = 1; j &lt;= m; j++)</span></span><br><span class="line">        <span class="comment">//     printf(&quot;%d &quot;, f[j]);</span></span><br><span class="line">        <span class="comment">// puts(&quot;&quot;);</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, f[m]);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="数字游戏game">6. 数字游戏(game)</h3>
-<h4 id="题目描述-5">题目描述</h4>
-<p>丁丁最近沉迷于一个数字游戏。这个游戏看似简单，但丁丁在研究了许多天之后却发觉原来在简单的规则下想要赢得这个游戏并不那么容易。</p>
-<p>游戏是这样的，在你面前有一圈整数（一共 <span
-class="math inline">\(n\)</span> 个），你要按顺序将其分为 <span
-class="math inline">\(m\)</span> 个部分，各部分内的数字相加，相加所得的
-<span class="math inline">\(m\)</span> 个结果对 <span
-class="math inline">\(10\)</span> 取模后再相乘，最终得到一个数 <span
-class="math inline">\(k\)</span>。游戏的要求是使你所得的 <span
-class="math inline">\(k\)</span> 最大或者最小。</p>
-<p>例如，对于下面这圈数字（<span
-class="math inline">\(n=4,m=2\)</span>）：</p>
-<figure>
-<img src="https://s2.loli.net/2022/04/28/wYprJjBfLU7GuN8.png"
-alt="1.png" />
-<figcaption aria-hidden="true">1.png</figcaption>
-</figure>
-<p>当要求最小值时， <span class="math display">\[
-((2−1)\ mod\ 10)×((4+3)\ mod\ 10)=1×7=7
-\]</span> 要求最大值时，为 <span class="math display">\[
-((2+4+3)\ mod\ 10)×(−1\ mod\ 10)=9×9=81
-\]</span> 特别值得注意的是，无论是负数还是正数，对 <span
-class="math inline">\(10\)</span> 取模的结果均为非负值。</p>
+
+<h3 id="6-数字游戏-game"><a href="#6-数字游戏-game" class="headerlink" title="6. 数字游戏(game)"></a>6. 数字游戏(game)</h3><h4 id="题目描述-5"><a href="#题目描述-5" class="headerlink" title="题目描述"></a>题目描述</h4><p>丁丁最近沉迷于一个数字游戏。这个游戏看似简单，但丁丁在研究了许多天之后却发觉原来在简单的规则下想要赢得这个游戏并不那么容易。</p>
+<p>游戏是这样的，在你面前有一圈整数（一共 $n$ 个），你要按顺序将其分为 $m$ 个部分，各部分内的数字相加，相加所得的 $m$ 个结果对 $10$ 取模后再相乘，最终得到一个数 $k$。游戏的要求是使你所得的 $k$ 最大或者最小。</p>
+<p>例如，对于下面这圈数字（$n=4,m=2$）：</p>
+<p><img src="https://s2.loli.net/2022/04/28/wYprJjBfLU7GuN8.png" alt="1.png"></p>
+<p>当要求最小值时，<br>$$<br>((2−1)\ mod\ 10)×((4+3)\ mod\ 10)=1×7=7<br>$$<br>要求最大值时，为<br>$$<br>((2+4+3)\ mod\ 10)×(−1\ mod\ 10)=9×9=81<br>$$<br>特别值得注意的是，无论是负数还是正数，对 $10$ 取模的结果均为非负值。</p>
 <p>丁丁请你编写程序帮他赢得这个游戏。</p>
-<h4 id="输入格式-5">输入格式</h4>
-<p>输入第一行有两个整数，<span class="math inline">\(n(1\le n\le
-50)\)</span> 和 <span class="math inline">\(m(1\le m\le
-9)\)</span>。</p>
-<p>以下 <span class="math inline">\(n\)</span>
-行每行有一个整数，其绝对值不大于 <span
-class="math inline">\(10^4\)</span>，按顺序给出圈中的数字，首尾相接。</p>
-<h4 id="输出格式-5">输出格式</h4>
-<p>输出有两行，各包含一个非负整数。第一行是你程序得到的最小值，第二行是最大值。</p>
-<h4 id="解法分析-5">解法分析</h4>
-<p>遇到这种<a id="huanxindp"><strong>环形区间DP</strong></a>时，我们采用<strong>破环成链</strong>的方法，即将链拷贝一份加在末尾</p>
+<h4 id="输入格式-5"><a href="#输入格式-5" class="headerlink" title="输入格式"></a>输入格式</h4><p>输入第一行有两个整数，$n(1\le n\le 50)$ 和 $m(1\le m\le 9)$。</p>
+<p>以下 $n$ 行每行有一个整数，其绝对值不大于 $10^4$，按顺序给出圈中的数字，首尾相接。</p>
+<h4 id="输出格式-5"><a href="#输出格式-5" class="headerlink" title="输出格式"></a>输出格式</h4><p>输出有两行，各包含一个非负整数。第一行是你程序得到的最小值，第二行是最大值。</p>
+<h4 id="解法分析-5"><a href="#解法分析-5" class="headerlink" title="解法分析"></a>解法分析</h4><p>遇到这种<a id="huanxindp"><strong>环形区间DP</strong></a>时，我们采用<strong>破环成链</strong>的方法，即将链拷贝一份加在末尾</p>
 <p>例如：4 3 -1 2 -&gt; 4 3 -1 2 4 3 -1 2</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>1</th>
 <th>2</th>
 <th>3</th>
@@ -523,8 +394,7 @@ class="math inline">\(10^4\)</span>，按顺序给出圈中的数字，首尾相
 <th>8</th>
 </tr>
 </thead>
-<tbody>
-<tr class="odd">
+<tbody><tr>
 <td>4</td>
 <td>3</td>
 <td>-1</td>
@@ -534,166 +404,49 @@ class="math inline">\(10^4\)</span>，按顺序给出圈中的数字，首尾相
 <td>-1</td>
 <td>2</td>
 </tr>
-</tbody>
-</table>
-<p>长度最大为 N 的区间有 N 个，分别为
-<code>[1,n], [2,n+1], [3,n+2], ... ,[n,n+n-1]</code>。我们最终在这 N
-个情况中选择最优解。</p>
+</tbody></table>
+<p>长度最大为 N 的区间有 N 个，分别为 <code>[1,n], [2,n+1], [3,n+2], ... ,[n,n+n-1]</code>。我们最终在这 N 个情况中选择最优解。</p>
 <p>其他的都不解释了，代码里注释比较清楚，有问题可以留言。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">109</span>, INF = <span class="number">0x3F3F3F3F</span>;</span><br><span class="line"><span class="comment">// f[i][j][z] 表示从 i 到 j 的部分，分成 z 份的最大值</span></span><br><span class="line"><span class="comment">// g[i][j][z] 表示从 i 到 j 的部分，分成 z 份的最小值</span></span><br><span class="line"><span class="type">int</span> f[N][N][<span class="number">10</span>], g[N][N][<span class="number">10</span>];</span><br><span class="line"><span class="type">int</span> n, m;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d%d&quot;</span>, &amp;n, &amp;m);</span><br><span class="line">    <span class="built_in">memset</span>(g, INF, <span class="keyword">sizeof</span> g);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;f[i][i][<span class="number">1</span>]);</span><br><span class="line">        <span class="comment">// 将所有的数全部转成大于等于0且小于等于10的整数</span></span><br><span class="line">        f[i][i][<span class="number">1</span>] = g[i][i][<span class="number">1</span>] = (f[i][i][<span class="number">1</span>]%<span class="number">10</span> + <span class="number">10</span>) % <span class="number">10</span>;</span><br><span class="line">        <span class="comment">// &quot;破环成链&quot;</span></span><br><span class="line">        f[n+i][n+i][<span class="number">1</span>] = g[n+i][n+i][<span class="number">1</span>] = f[i][i][<span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 求前缀和</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt; n+n; i++)</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = i+<span class="number">1</span>; j &lt;= n+n; j++)</span><br><span class="line">            g[i][j][<span class="number">1</span>] = f[i][j][<span class="number">1</span>] = (f[i][j<span class="number">-1</span>][<span class="number">1</span>] + f[j][j][<span class="number">1</span>]) % <span class="number">10</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> z = <span class="number">2</span>; z &lt;= m; z++) <span class="comment">// 枚举份数</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++) <span class="comment">// 枚举左端点</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> j = i+z<span class="number">-1</span>; j &lt; i+n; j++) <span class="comment">// 枚举右端点</span></span><br><span class="line">                <span class="keyword">for</span> (<span class="type">int</span> k = i+z<span class="number">-2</span>; k &lt; j; k++) &#123; <span class="comment">// 枚举中间节点</span></span><br><span class="line">                    g[i][j][z] = std::<span class="built_in">min</span>(g[i][j][z], g[i][k][z<span class="number">-1</span>] * g[k+<span class="number">1</span>][j][<span class="number">1</span>]);</span><br><span class="line">                    f[i][j][z] = std::<span class="built_in">max</span>(f[i][j][z], f[i][k][z<span class="number">-1</span>] * f[k+<span class="number">1</span>][j][<span class="number">1</span>]);</span><br><span class="line">                &#125;</span><br><span class="line">    <span class="comment">// 求最大&amp;最小值</span></span><br><span class="line">    <span class="type">int</span> mx = <span class="number">0</span>, mn = INF;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">        mx = f[i][i+n<span class="number">-1</span>][m]&gt;mx ? f[i][i+n<span class="number">-1</span>][m] : mx;</span><br><span class="line">        mn = g[i][i+n<span class="number">-1</span>][m]&lt;mn ? g[i][i+n<span class="number">-1</span>][m] : mn;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n%d\n&quot;</span>, mn, mx);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="能量项链energy">7. 能量项链(energy)</h3>
-<h4 id="题目描述-6">题目描述</h4>
-<p>在Mars星球上，每个Mars人都随身佩带着一串能量项链。在项链上有 <span
-class="math inline">\(N\)</span>
-颗能量珠。能量珠是一颗有头标记与尾标记的珠子，这些标记对应着某个正整数。并且，对于相邻的两颗珠子，前一颗珠子的尾标记一定等于后一颗珠子的头标记。因为只有这样，通过吸盘（吸盘是Mars人吸收能量的一种器官）的作用，这两颗珠子才能聚合成一颗珠子，同时释放出可以被吸盘吸收的能量。如果前一颗能量珠的头标记为
-<span class="math inline">\(m\)</span>，尾标记为 <span
-class="math inline">\(r\)</span>，后一颗能量珠的头标记为 <span
-class="math inline">\(r\)</span>，尾标记为 <span
-class="math inline">\(n\)</span>，则聚合后释放的能量为 <span
-class="math inline">\(m\ast r\ast n\)</span>
-（Mars单位），新产生的珠子的头标记为 <span
-class="math inline">\(m\)</span>，尾标记为 <span
-class="math inline">\(n\)</span>。</p>
+
+<h3 id="7-能量项链-energy"><a href="#7-能量项链-energy" class="headerlink" title="7. 能量项链(energy)"></a>7. 能量项链(energy)</h3><h4 id="题目描述-6"><a href="#题目描述-6" class="headerlink" title="题目描述"></a>题目描述</h4><p>在Mars星球上，每个Mars人都随身佩带着一串能量项链。在项链上有 $N$ 颗能量珠。能量珠是一颗有头标记与尾标记的珠子，这些标记对应着某个正整数。并且，对于相邻的两颗珠子，前一颗珠子的尾标记一定等于后一颗珠子的头标记。因为只有这样，通过吸盘（吸盘是Mars人吸收能量的一种器官）的作用，这两颗珠子才能聚合成一颗珠子，同时释放出可以被吸盘吸收的能量。如果前一颗能量珠的头标记为 $m$，尾标记为 $r$，后一颗能量珠的头标记为 $r$，尾标记为 $n$，则聚合后释放的能量为 $m\ast r\ast n$ （Mars单位），新产生的珠子的头标记为 $m$，尾标记为 $n$。</p>
 <p>需要时，Mars人就用吸盘夹住相邻的两颗珠子，通过聚合得到能量，直到项链上只剩下一颗珠子为止。显然，不同的聚合顺序得到的总能量是不同的，请你设计一个聚合顺序，使一串项链释放出的总能量最大。</p>
-<p>例如：设 <span class="math inline">\(N=4\)</span>，<span
-class="math inline">\(4\)</span> 颗珠子的头标记与尾标记依次为 <span
-class="math inline">\((2,3) (3,5) (5,10) (10,2)\)</span>。我们用记号
-<span class="math inline">\(\bigoplus\)</span>
-表示两颗珠子的聚合操作，<span class="math inline">\((j\bigoplus
-k)\)</span> 表示第 <span class="math inline">\(j,k\)</span>
-两颗珠子聚合后所释放的能量。则第 <span class="math inline">\(4,
-1\)</span> 两颗珠子聚合后释放的能量为： <span class="math display">\[
-(4\bigoplus1)=10\times 2\times 3=60
-\]</span> 这一串项链可以得到最优值的一个聚合顺序所释放的总能量为 <span
-class="math display">\[
-((4\bigoplus 1)\bigoplus 2)\bigoplus 3）=10\times 2\times 3+10\times
-3\times 5+10\times 5\times 10=710
-\]</span></p>
-<h4 id="输入格式-6">输入格式</h4>
-<p>输入第一行是一个正整数 <span class="math inline">\(N(4\le N\le
-100)\)</span>，表示项链上珠子的个数。第二行是 <span
-class="math inline">\(N\)</span> 个用空格隔开的正整数，所有的数均不超过
-<span class="math inline">\(1000\)</span>。第 <span
-class="math inline">\(i\)</span> 个数为第 <span
-class="math inline">\(i\)</span> 颗珠子的头标记<span
-class="math inline">\((1\le i\le N)\)</span>，当 <span
-class="math inline">\(i&lt;N\)</span> 时，第 <span
-class="math inline">\(i\)</span> 颗珠子的尾标记应该等于第 <span
-class="math inline">\(i+1\)</span> 颗珠子的头标记。第 <span
-class="math inline">\(N\)</span> 颗珠子的尾标记应该等于第 <span
-class="math inline">\(1\)</span> 颗珠子的头标记。</p>
+<p>例如：设 $N=4$，$4$ 颗珠子的头标记与尾标记依次为 $(2,3) (3,5) (5,10) (10,2)$。我们用记号 $\bigoplus$ 表示两颗珠子的聚合操作，$(j\bigoplus k)$ 表示第 $j,k$ 两颗珠子聚合后所释放的能量。则第 $4, 1$ 两颗珠子聚合后释放的能量为：<br>$$<br>(4\bigoplus1)=10\times 2\times 3=60<br>$$<br>这一串项链可以得到最优值的一个聚合顺序所释放的总能量为<br>$$<br>((4\bigoplus 1)\bigoplus 2)\bigoplus 3）=10\times 2\times 3+10\times 3\times 5+10\times 5\times 10=710<br>$$</p>
+<h4 id="输入格式-6"><a href="#输入格式-6" class="headerlink" title="输入格式"></a>输入格式</h4><p>输入第一行是一个正整数 $N(4\le N\le 100)$，表示项链上珠子的个数。第二行是 $N$ 个用空格隔开的正整数，所有的数均不超过 $1000$。第 $i$ 个数为第 $i$ 颗珠子的头标记$(1\le i\le N)$，当 $i&lt;N$ 时，第 $i$ 颗珠子的尾标记应该等于第 $i+1$ 颗珠子的头标记。第 $N$ 颗珠子的尾标记应该等于第 $1$ 颗珠子的头标记。</p>
 <p>至于珠子的顺序，你可以这样确定：将项链放到桌面上，不要出现交叉，随意指定第一颗珠子，然后按顺时针方向确定其他珠子的顺序。</p>
-<h4 id="输出格式-6">输出格式</h4>
-<p>输出只有一行，是一个正整数 <span class="math inline">\(E(E≤2.1\times
-10^9)\)</span>，为一个最优聚合顺序所释放的总能量。</p>
-<h4 id="解法分析-6">解法分析</h4>
-<p>这题仍然是一道<a href="#huanxindp">环形DP问题</a>，就不详细讲了。</p>
+<h4 id="输出格式-6"><a href="#输出格式-6" class="headerlink" title="输出格式"></a>输出格式</h4><p>输出只有一行，是一个正整数 $E(E≤2.1\times 10^9)$，为一个最优聚合顺序所释放的总能量。</p>
+<h4 id="解法分析-6"><a href="#解法分析-6" class="headerlink" title="解法分析"></a>解法分析</h4><p>这题仍然是一道<a href="#huanxindp">环形DP问题</a>，就不详细讲了。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">209</span>;</span><br><span class="line"><span class="type">int</span> n, f[N][N];</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">node</span> &#123;</span><br><span class="line">    <span class="type">int</span> x, y;</span><br><span class="line">&#125; a[N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;n);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;a[i].x);</span><br><span class="line">        a[i+n].x = a[i].x, a[i<span class="number">-1</span>].y = a[i+n<span class="number">-1</span>].y = a[i].x;</span><br><span class="line">    &#125; a[<span class="number">2</span>*n].y = a[<span class="number">1</span>].x; <span class="comment">// 初始化数组</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> len = <span class="number">1</span>; len &lt;= n; len++)</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i+len &lt; <span class="number">2</span>*n; i++) &#123;</span><br><span class="line">            <span class="type">int</span> t = i + len;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> k = i; k &lt; t; k++)</span><br><span class="line">                f[i][t] = std::<span class="built_in">max</span>(f[i][t], f[i][k] + f[k+<span class="number">1</span>][t] + a[i].x * a[k].y * a[t].y);</span><br><span class="line">        &#125;</span><br><span class="line">    <span class="type">int</span> ans = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        ans = std::<span class="built_in">max</span>(ans, f[i][i+n<span class="number">-1</span>]);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, ans);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="传纸条message">8. 传纸条(message)</h3>
-<h4 id="题目描述-7">题目描述</h4>
-<p>小渊和小轩是好朋友也是同班同学，他们在一起总有谈不完的话题。一次素质拓展活动中，班上同学安排做成一个
-<span class="math inline">\(m\)</span> 行 <span
-class="math inline">\(n\)</span>
-列的矩阵，而小渊和小轩被安排在矩阵对角线的两端，因此，他们就无法直接交谈了。幸运的是，他们可以通过传纸条来进行交流。纸条要经由许多同学传到对方手里，小渊坐在矩阵的左上角，坐标
-<span class="math inline">\((1,1)\)</span>，小轩坐在矩阵的右下角，坐标
-<span class="math inline">\((m,n)\)</span>。</p>
+
+<h3 id="8-传纸条-message"><a href="#8-传纸条-message" class="headerlink" title="8. 传纸条(message)"></a>8. 传纸条(message)</h3><h4 id="题目描述-7"><a href="#题目描述-7" class="headerlink" title="题目描述"></a>题目描述</h4><p>小渊和小轩是好朋友也是同班同学，他们在一起总有谈不完的话题。一次素质拓展活动中，班上同学安排做成一个 $m$ 行 $n$ 列的矩阵，而小渊和小轩被安排在矩阵对角线的两端，因此，他们就无法直接交谈了。幸运的是，他们可以通过传纸条来进行交流。纸条要经由许多同学传到对方手里，小渊坐在矩阵的左上角，坐标 $(1,1)$，小轩坐在矩阵的右下角，坐标 $(m,n)$。</p>
 <p>从小渊传到小轩的纸条只可以向下或者向右传递，从小轩传给小渊的纸条只可以向上或者向左传递。</p>
 <p>在活动进行中，小渊希望给小轩传递一张纸条，同时希望小轩给他回复。班里每个同学都可以帮他们传递，但只会帮他们一次，也就是说如果此人在小渊递给小轩纸条的时候帮忙，那么在小轩递给小渊的时候就不会再帮忙。反之亦然。</p>
-<p>还有一件事情需要注意，全班每个同学愿意帮忙的好感度有高有低（注意：小渊和小轩的好心程度没有定义，输入时用
-<span class="math inline">\(0\)</span> 表示），可以用一个 <span
-class="math inline">\(0\sim 100\)</span>
-的自然数来表示，数越大表示越好心。小渊和小轩希望尽可能找好心程度高的同学来帮忙传纸条，即找到来回两条传递路径，使得这两条路径上同学的好心程度之和最大。现在，请你帮助小渊和小轩找到这样的两条路径。</p>
-<h4 id="输入格式-7">输入格式</h4>
-<p>输入的第一行有 <span class="math inline">\(2\)</span>
-个用空格隔开的整数 <span class="math inline">\(m\)</span> 和 <span
-class="math inline">\(n\)</span>，表示班里有 <span
-class="math inline">\(m\)</span> 行 <span
-class="math inline">\(n\)</span> 列 <span class="math inline">\((1\le
-m,n\le 50)\)</span>。</p>
-<p>接下来的 <span class="math inline">\(m\)</span> 行是一个 <span
-class="math inline">\(m\times n\)</span> 的矩阵，矩阵中第 <span
-class="math inline">\(i\)</span> 行 <span
-class="math inline">\(j\)</span> 列的整数表示坐在第 <span
-class="math inline">\(i\)</span> 行 <span
-class="math inline">\(j\)</span> 列的学生的好心程度。每行的 <span
-class="math inline">\(n\)</span> 个整数之间用空格隔开。</p>
-<h4 id="输出格式-7">输出格式</h4>
-<p>输出共一行，包含一个整数，表示来回两条路上参与传递纸条的学生的好心程度之和的最大值。</p>
-<h4 id="解法分析-7">解法分析</h4>
-<p>这道题难度较大，先定下状态：<code>f[i][j][p][q]</code> 表示
-<strong>从小渊传到小轩的纸条到达 <span
-class="math inline">\((i,j)\)</span>，从小轩传给小渊的纸条到达 <span
-class="math inline">\((p,q)\)</span>
-的路径上取得的最大的好心程度和</strong> （这是坐标类DP的常见状态）</p>
-<p>换句话说，即求<strong>第一张纸条到达 <span
-class="math inline">\((i,j)\)</span>，第二纸条到达 <span
-class="math inline">\((p,q)\)</span>
-的路径上取得的最大的好心程度和，且两条路径严格不相交</strong></p>
-<p>所以，为了保证两条路径不重复，必须限制 <span
-class="math inline">\(q&gt;j\)</span>。如果不理解为什么这么限制，那么也可以让
-<span class="math inline">\(q\)</span> 从 <span
-class="math inline">\(1\)</span> 开始枚举，但是需要判断 <span
-class="math inline">\((i,j)\)</span> 与 <span class="math inline">\((p,
-q)\)</span> 是否重合，若重合就把 <span class="math inline">\(f\)</span>
-数组转移后减掉 <code>a[i][j]</code> 或 <code>a[p][q]</code>。</p>
-<p>时间复杂度 <span class="math inline">\(O(n^2\times
-m^2)\)</span>，即最多 <span class="math inline">\(6250000\)</span>
-次计算，可以
-<font color="green" size="5px"><strong>AC</strong></font></p>
-<p>当然，可以优化这种算法。我们发现，<span
-class="math inline">\(i+j=p+q=step\)</span> ，所以可以用 <span
-class="math inline">\(step\)</span>
-来表示其他两维，这样就实现了四维到三维的降维。这样，时间复杂度降低到
-<span class="math inline">\(O(n^2\times (n+m))\)</span>，即最多 <span
-class="math inline">\(250000\)</span> 次计算，比上一种算法快 <span
-class="math inline">\(20\)</span>
-多倍。由于这种算法原理与第一种一样，就不给出代码<del>（懒）</del>，供读者思考。</p>
+<p>还有一件事情需要注意，全班每个同学愿意帮忙的好感度有高有低（注意：小渊和小轩的好心程度没有定义，输入时用 $0$ 表示），可以用一个 $0\sim 100$ 的自然数来表示，数越大表示越好心。小渊和小轩希望尽可能找好心程度高的同学来帮忙传纸条，即找到来回两条传递路径，使得这两条路径上同学的好心程度之和最大。现在，请你帮助小渊和小轩找到这样的两条路径。</p>
+<h4 id="输入格式-7"><a href="#输入格式-7" class="headerlink" title="输入格式"></a>输入格式</h4><p>输入的第一行有 $2$ 个用空格隔开的整数 $m$ 和 $n$，表示班里有 $m$ 行 $n$ 列 $(1\le m,n\le 50)$。</p>
+<p>接下来的 $m$ 行是一个 $m\times n$ 的矩阵，矩阵中第 $i$ 行 $j$ 列的整数表示坐在第 $i$ 行 $j$ 列的学生的好心程度。每行的 $n$ 个整数之间用空格隔开。</p>
+<h4 id="输出格式-7"><a href="#输出格式-7" class="headerlink" title="输出格式"></a>输出格式</h4><p>输出共一行，包含一个整数，表示来回两条路上参与传递纸条的学生的好心程度之和的最大值。</p>
+<h4 id="解法分析-7"><a href="#解法分析-7" class="headerlink" title="解法分析"></a>解法分析</h4><p>这道题难度较大，先定下状态：<code>f[i][j][p][q]</code> 表示 <strong>从小渊传到小轩的纸条到达 $(i,j)$，从小轩传给小渊的纸条到达 $(p,q)$ 的路径上取得的最大的好心程度和</strong> （这是坐标类DP的常见状态）</p>
+<p>换句话说，即求<strong>第一张纸条到达 $(i,j)$，第二纸条到达 $(p,q)$ 的路径上取得的最大的好心程度和，且两条路径严格不相交</strong></p>
+<p>所以，为了保证两条路径不重复，必须限制 $q&gt;j$。如果不理解为什么这么限制，那么也可以让 $q$ 从 $1$ 开始枚举，但是需要判断 $(i,j)$ 与 $(p, q)$ 是否重合，若重合就把 $f$ 数组转移后减掉 <code>a[i][j]</code> 或 <code>a[p][q]</code>。</p>
+<p>时间复杂度 $O(n^2\times m^2)$，即最多 $6250000$ 次计算，可以 <font color="green" size="5px"><strong>AC</strong></font></p>
+<p>当然，可以优化这种算法。我们发现，$i+j=p+q=step$ ，所以可以用 $step$ 来表示其他两维，这样就实现了四维到三维的降维。这样，时间复杂度降低到 $O(n^2\times (n+m))$，即最多 $250000$ 次计算，比上一种算法快 $20$ 多倍。由于这种算法原理与第一种一样，就不给出代码<del>（懒）</del>，供读者思考。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> std::max;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">55</span>;</span><br><span class="line"><span class="type">int</span> m, n, a[N][N], f[N][N][N][N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">max_of_four_ele</span><span class="params">(<span class="type">int</span> liu, <span class="type">int</span> rong, <span class="type">int</span> sha, <span class="type">int</span> bi)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">max</span>(liu, <span class="built_in">max</span>(rong, <span class="built_in">max</span>(sha, bi)));</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d%d&quot;</span>, &amp;m, &amp;n);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= m; i++)</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">1</span>; j &lt;= n; j++)</span><br><span class="line">            <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;a[i][j]);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= m; i++)</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">1</span>; j &lt;= n; j++)</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> p = <span class="number">1</span>; p &lt;= m; p++)</span><br><span class="line">                <span class="keyword">for</span> (<span class="type">int</span> q = j+<span class="number">1</span>; q &lt;= n; q++)</span><br><span class="line">                    f[i][j][p][q] = <span class="built_in">max_of_four_ele</span>(f[i<span class="number">-1</span>][j][p<span class="number">-1</span>][q], f[i][j<span class="number">-1</span>][p<span class="number">-1</span>][q], f[i<span class="number">-1</span>][j][p][q<span class="number">-1</span>], f[i][j<span class="number">-1</span>][p][q<span class="number">-1</span>]) + a[i][j] + a[p][q];</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, f[m][n<span class="number">-1</span>][m<span class="number">-1</span>][n]);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="筷子chop">9. 筷子(chop)</h3>
-<h4 id="题目描述-8">题目描述</h4>
-<p>A
-先生有很多双筷子。确切的说应该是很多根，因为筷子的长度不一，很难判断出哪两根是一双的。这天，A
-先生家里来了 <span class="math inline">\(K\)</span> 个客人，A
-先生留下他们吃晚饭。加上 A 先生，A 夫人和他们的孩子小 A，共 <span
-class="math inline">\(K+3\)</span> 个人。每人需要用一双筷子。A
-先生只好清理了一下筷子，共 <span class="math inline">\(N\)</span>
-根，长度为 <span
-class="math inline">\(T_1,T_2,T_3,\dots,T_N\)</span>。</p>
-<p>现在他想用这些筷子组合成 <span class="math inline">\(K+3\)</span>
-双，使每双的筷子长度差的平方和最小。(怎么不是和最小？？这要去问 A
-先生了，呵呵)</p>
-<h4 id="输入格式-8">输入格式</h4>
-<p>输入共有两行，第一行为两个用空格隔开的整数，表示 <span
-class="math inline">\(N,K(1≤N≤100, 0&lt;K&lt;50)\)</span>，第二行共有
-N<em>N</em> 个用空格隔开的整数，为 <span
-class="math inline">\(T_i\)</span>。每个整数为 <span
-class="math inline">\(1\sim 50\)</span> 之间的数。</p>
-<h4 id="输出格式-8">输出格式</h4>
-<p>输出仅一行。如果凑不齐 <span class="math inline">\(K+3\)</span>
-双，输出 <span
-class="math inline">\(-1\)</span>，否则输出长度差平方和的最小值。</p>
-<h4 id="解法分析-8">解法分析</h4>
-<p>背包问题变形。</p>
+
+<h3 id="9-筷子-chop"><a href="#9-筷子-chop" class="headerlink" title="9. 筷子(chop)"></a>9. 筷子(chop)</h3><h4 id="题目描述-8"><a href="#题目描述-8" class="headerlink" title="题目描述"></a>题目描述</h4><p>A 先生有很多双筷子。确切的说应该是很多根，因为筷子的长度不一，很难判断出哪两根是一双的。这天，A 先生家里来了 $K$ 个客人，A 先生留下他们吃晚饭。加上 A 先生，A 夫人和他们的孩子小 A，共 $K+3$ 个人。每人需要用一双筷子。A 先生只好清理了一下筷子，共 $N$ 根，长度为 $T_1,T_2,T_3,\dots,T_N$。</p>
+<p>现在他想用这些筷子组合成 $K+3$ 双，使每双的筷子长度差的平方和最小。(怎么不是和最小？？这要去问 A 先生了，呵呵)</p>
+<h4 id="输入格式-8"><a href="#输入格式-8" class="headerlink" title="输入格式"></a>输入格式</h4><p>输入共有两行，第一行为两个用空格隔开的整数，表示 $N,K(1≤N≤100, 0&lt;K&lt;50)$，第二行共有 N<em>N</em> 个用空格隔开的整数，为 $T_i$。每个整数为 $1\sim 50$ 之间的数。</p>
+<h4 id="输出格式-8"><a href="#输出格式-8" class="headerlink" title="输出格式"></a>输出格式</h4><p>输出仅一行。如果凑不齐 $K+3$ 双，输出 $-1$，否则输出长度差平方和的最小值。</p>
+<h4 id="解法分析-8"><a href="#解法分析-8" class="headerlink" title="解法分析"></a>解法分析</h4><p>背包问题变形。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">107</span>;</span><br><span class="line"><span class="type">int</span> n, k, a[N], f[N][N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d%d&quot;</span>, &amp;n, &amp;k); k += <span class="number">3</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, a + i);</span><br><span class="line">    <span class="keyword">if</span> (k+k &gt; n) &#123; <span class="built_in">puts</span>(<span class="string">&quot;-1&quot;</span>); <span class="keyword">return</span> <span class="number">0</span>; &#125;</span><br><span class="line">    std::<span class="built_in">sort</span>(a + <span class="number">1</span>, a + n + <span class="number">1</span>);</span><br><span class="line">    <span class="built_in">memset</span>(f, <span class="number">0x3F</span>, <span class="keyword">sizeof</span> f);</span><br><span class="line">    f[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= k; i++)</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = i+i; j &lt;= n; j++)</span><br><span class="line">            f[i][j] = std::<span class="built_in">min</span>(f[i][j<span class="number">-1</span>], f[i<span class="number">-1</span>][j<span class="number">-2</span>] + (a[j]-a[j<span class="number">-1</span>])*(a[j]-a[j<span class="number">-1</span>]));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, f[k][n]);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="合并石子merge">10. 合并石子(merge)</h3>
-<h4 id="题目描述-9">题目描述</h4>
-<p>在一个操场上一排地摆放着 <span class="math inline">\(N\)</span>
-堆石子。现要将石子有次序地合并成一堆。规定每次只能选相邻的 <span
-class="math inline">\(2\)</span>
-堆石子合并成新的一堆，并将新的一堆石子数记为该次合并的得分。</p>
-<p>试设计一个程序，计算出将 <span class="math inline">\(N\)</span>
-堆石子合并成一堆的最小得分。</p>
-<h4 id="输入格式-9">输入格式</h4>
-<p>第一行为一个正整数 <span class="math inline">\(N\ (2\le N\le
-100)\)</span>；</p>
-<p>以下 <span class="math inline">\(N\)</span> 行,每行一个正整数，小于
-<span class="math inline">\(10000\)</span>，分别表示第 <span
-class="math inline">\(i\)</span> 堆石子的个数。</p>
-<h4 id="输出格式-9">输出格式</h4>
-<p>为一个正整数，即最小得分。</p>
-<h4 id="解法分析-9"><a id="hebingshizi">解法分析</a></h4>
-<p>这是一道最经典的区间DP了，<del>真不知道为什么我要把这题拿到最后才讲</del>。区间DP的解法在之前已经讲过了，这里不再赘述。<a href="#qujiandp">点我跳转</a></p>
+
+<h3 id="10-合并石子-merge"><a href="#10-合并石子-merge" class="headerlink" title="10. 合并石子(merge)"></a>10. 合并石子(merge)</h3><h4 id="题目描述-9"><a href="#题目描述-9" class="headerlink" title="题目描述"></a>题目描述</h4><p>在一个操场上一排地摆放着 $N$ 堆石子。现要将石子有次序地合并成一堆。规定每次只能选相邻的 $2$ 堆石子合并成新的一堆，并将新的一堆石子数记为该次合并的得分。</p>
+<p>试设计一个程序，计算出将 $N$ 堆石子合并成一堆的最小得分。</p>
+<h4 id="输入格式-9"><a href="#输入格式-9" class="headerlink" title="输入格式"></a>输入格式</h4><p>第一行为一个正整数 $N\ (2\le N\le 100)$；</p>
+<p>以下 $N$ 行,每行一个正整数，小于 $10000$，分别表示第 $i$ 堆石子的个数。</p>
+<h4 id="输出格式-9"><a href="#输出格式-9" class="headerlink" title="输出格式"></a>输出格式</h4><p>为一个正整数，即最小得分。</p>
+<h4 id="解法分析-9"><a href="#解法分析-9" class="headerlink" title="解法分析"></a><a id="hebingshizi">解法分析</a></h4><p>这是一道最经典的区间DP了，<del>真不知道为什么我要把这题拿到最后才讲</del>。区间DP的解法在之前已经讲过了，这里不再赘述。<a href="#qujiandp">点我跳转</a></p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">109</span>, INF = <span class="number">0x3F3F3F3F</span>;</span><br><span class="line"><span class="type">int</span> n, s[N], f[N][N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;n);</span><br><span class="line">    <span class="built_in">memset</span>(f, INF, <span class="keyword">sizeof</span> f);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        f[i][i] = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, s + i), s[i] += s[i<span class="number">-1</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = n<span class="number">-1</span>; i &gt;= <span class="number">1</span>; i--)</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = i+<span class="number">1</span>; j &lt;= n; j++) &#123;</span><br><span class="line">            <span class="type">int</span> t = s[j] - s[i<span class="number">-1</span>];</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> k = i; k &lt; j; k++)</span><br><span class="line">                f[i][j] = std::<span class="built_in">min</span>(f[i][j], f[i][k] + f[k+<span class="number">1</span>][j] + t);</span><br><span class="line">        &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, f[<span class="number">1</span>][n]);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 
     </div>
 
@@ -721,8 +474,8 @@ class="math inline">\(i\)</span> 堆石子的个数。</p>
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag"><i class="fa fa-tag"></i> 动态规划</a>
               <a href="/tags/C/" rel="tag"><i class="fa fa-tag"></i> C++</a>
+              <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag"><i class="fa fa-tag"></i> 动态规划</a>
           </div>
 
         
@@ -797,7 +550,7 @@ class="math inline">\(i\)</span> 堆石子的个数。</p>
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E6%8A%97%E8%B5%9Bcompete"><span class="nav-number">1.</span> <span class="nav-text">1. 对抗赛(compete)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E6%A0%BC%E5%BC%8F"><span class="nav-number">1.2.</span> <span class="nav-text">输入格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E6%A0%BC%E5%BC%8F"><span class="nav-number">1.3.</span> <span class="nav-text">输出格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E6%B3%95%E5%88%86%E6%9E%90"><span class="nav-number">1.4.</span> <span class="nav-text">解法分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BC%94%E8%AE%B2%E5%A4%A7%E5%8E%85%E5%AE%89%E6%8E%92hall"><span class="nav-number">2.</span> <span class="nav-text">2. 演讲大厅安排(hall)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0-1"><span class="nav-number">2.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E6%A0%BC%E5%BC%8F-1"><span class="nav-number">2.2.</span> <span class="nav-text">输入格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E6%A0%BC%E5%BC%8F-1"><span class="nav-number">2.3.</span> <span class="nav-text">输出格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E6%B3%95%E5%88%86%E6%9E%90-1"><span class="nav-number">2.4.</span> <span class="nav-text">解法分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%81%AB%E8%BD%A6%E7%A5%A8railway"><span class="nav-number">3.</span> <span class="nav-text">3. 火车票(railway)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0-2"><span class="nav-number">3.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E6%A0%BC%E5%BC%8F-2"><span class="nav-number">3.2.</span> <span class="nav-text">输入格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E6%A0%BC%E5%BC%8F-2"><span class="nav-number">3.3.</span> <span class="nav-text">输出格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E6%B3%95%E5%88%86%E6%9E%90-2"><span class="nav-number">3.4.</span> <span class="nav-text">解法分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E8%AF%8D%E7%9A%84%E5%88%92%E5%88%86word"><span class="nav-number">4.</span> <span class="nav-text">4. 单词的划分(word)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0-3"><span class="nav-number">4.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E6%A0%BC%E5%BC%8F-3"><span class="nav-number">4.2.</span> <span class="nav-text">输入格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E6%A0%BC%E5%BC%8F-3"><span class="nav-number">4.3.</span> <span class="nav-text">输出格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E6%B3%95%E5%88%86%E6%9E%90-3"><span class="nav-number">4.4.</span> <span class="nav-text">解法分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A5%A5%E9%A5%BF%E7%9A%84%E7%89%9Bhunger"><span class="nav-number">5.</span> <span class="nav-text">5. 饥饿的牛(hunger)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0-4"><span class="nav-number">5.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E6%A0%BC%E5%BC%8F-4"><span class="nav-number">5.2.</span> <span class="nav-text">输入格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E6%A0%BC%E5%BC%8F-4"><span class="nav-number">5.3.</span> <span class="nav-text">输出格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E6%B3%95%E5%88%86%E6%9E%90-4"><span class="nav-number">5.4.</span> <span class="nav-text">解法分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E5%AD%97%E6%B8%B8%E6%88%8Fgame"><span class="nav-number">6.</span> <span class="nav-text">6. 数字游戏(game)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0-5"><span class="nav-number">6.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E6%A0%BC%E5%BC%8F-5"><span class="nav-number">6.2.</span> <span class="nav-text">输入格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E6%A0%BC%E5%BC%8F-5"><span class="nav-number">6.3.</span> <span class="nav-text">输出格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E6%B3%95%E5%88%86%E6%9E%90-5"><span class="nav-number">6.4.</span> <span class="nav-text">解法分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%BD%E9%87%8F%E9%A1%B9%E9%93%BEenergy"><span class="nav-number">7.</span> <span class="nav-text">7. 能量项链(energy)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0-6"><span class="nav-number">7.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E6%A0%BC%E5%BC%8F-6"><span class="nav-number">7.2.</span> <span class="nav-text">输入格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E6%A0%BC%E5%BC%8F-6"><span class="nav-number">7.3.</span> <span class="nav-text">输出格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E6%B3%95%E5%88%86%E6%9E%90-6"><span class="nav-number">7.4.</span> <span class="nav-text">解法分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%A0%E7%BA%B8%E6%9D%A1message"><span class="nav-number">8.</span> <span class="nav-text">8. 传纸条(message)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0-7"><span class="nav-number">8.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E6%A0%BC%E5%BC%8F-7"><span class="nav-number">8.2.</span> <span class="nav-text">输入格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E6%A0%BC%E5%BC%8F-7"><span class="nav-number">8.3.</span> <span class="nav-text">输出格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E6%B3%95%E5%88%86%E6%9E%90-7"><span class="nav-number">8.4.</span> <span class="nav-text">解法分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AD%B7%E5%AD%90chop"><span class="nav-number">9.</span> <span class="nav-text">9. 筷子(chop)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0-8"><span class="nav-number">9.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E6%A0%BC%E5%BC%8F-8"><span class="nav-number">9.2.</span> <span class="nav-text">输入格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E6%A0%BC%E5%BC%8F-8"><span class="nav-number">9.3.</span> <span class="nav-text">输出格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E6%B3%95%E5%88%86%E6%9E%90-8"><span class="nav-number">9.4.</span> <span class="nav-text">解法分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%88%E5%B9%B6%E7%9F%B3%E5%AD%90merge"><span class="nav-number">10.</span> <span class="nav-text">10. 合并石子(merge)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0-9"><span class="nav-number">10.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E6%A0%BC%E5%BC%8F-9"><span class="nav-number">10.2.</span> <span class="nav-text">输入格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E6%A0%BC%E5%BC%8F-9"><span class="nav-number">10.3.</span> <span class="nav-text">输出格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E6%B3%95%E5%88%86%E6%9E%90-9"><span class="nav-number">10.4.</span> <span class="nav-text">解法分析</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%AF%B9%E6%8A%97%E8%B5%9B-compete"><span class="nav-number">1.</span> <span class="nav-text">1. 对抗赛(compete)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E6%A0%BC%E5%BC%8F"><span class="nav-number">1.2.</span> <span class="nav-text">输入格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E6%A0%BC%E5%BC%8F"><span class="nav-number">1.3.</span> <span class="nav-text">输出格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E6%B3%95%E5%88%86%E6%9E%90"><span class="nav-number">1.4.</span> <span class="nav-text">解法分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%BC%94%E8%AE%B2%E5%A4%A7%E5%8E%85%E5%AE%89%E6%8E%92-hall"><span class="nav-number">2.</span> <span class="nav-text">2. 演讲大厅安排(hall)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0-1"><span class="nav-number">2.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E6%A0%BC%E5%BC%8F-1"><span class="nav-number">2.2.</span> <span class="nav-text">输入格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E6%A0%BC%E5%BC%8F-1"><span class="nav-number">2.3.</span> <span class="nav-text">输出格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E6%B3%95%E5%88%86%E6%9E%90-1"><span class="nav-number">2.4.</span> <span class="nav-text">解法分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E7%81%AB%E8%BD%A6%E7%A5%A8-railway"><span class="nav-number">3.</span> <span class="nav-text">3. 火车票(railway)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0-2"><span class="nav-number">3.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E6%A0%BC%E5%BC%8F-2"><span class="nav-number">3.2.</span> <span class="nav-text">输入格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E6%A0%BC%E5%BC%8F-2"><span class="nav-number">3.3.</span> <span class="nav-text">输出格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E6%B3%95%E5%88%86%E6%9E%90-2"><span class="nav-number">3.4.</span> <span class="nav-text">解法分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%8D%95%E8%AF%8D%E7%9A%84%E5%88%92%E5%88%86-word"><span class="nav-number">4.</span> <span class="nav-text">4. 单词的划分(word)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0-3"><span class="nav-number">4.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E6%A0%BC%E5%BC%8F-3"><span class="nav-number">4.2.</span> <span class="nav-text">输入格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E6%A0%BC%E5%BC%8F-3"><span class="nav-number">4.3.</span> <span class="nav-text">输出格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E6%B3%95%E5%88%86%E6%9E%90-3"><span class="nav-number">4.4.</span> <span class="nav-text">解法分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E9%A5%A5%E9%A5%BF%E7%9A%84%E7%89%9B-hunger"><span class="nav-number">5.</span> <span class="nav-text">5. 饥饿的牛(hunger)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0-4"><span class="nav-number">5.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E6%A0%BC%E5%BC%8F-4"><span class="nav-number">5.2.</span> <span class="nav-text">输入格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E6%A0%BC%E5%BC%8F-4"><span class="nav-number">5.3.</span> <span class="nav-text">输出格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E6%B3%95%E5%88%86%E6%9E%90-4"><span class="nav-number">5.4.</span> <span class="nav-text">解法分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E6%95%B0%E5%AD%97%E6%B8%B8%E6%88%8F-game"><span class="nav-number">6.</span> <span class="nav-text">6. 数字游戏(game)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0-5"><span class="nav-number">6.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E6%A0%BC%E5%BC%8F-5"><span class="nav-number">6.2.</span> <span class="nav-text">输入格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E6%A0%BC%E5%BC%8F-5"><span class="nav-number">6.3.</span> <span class="nav-text">输出格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E6%B3%95%E5%88%86%E6%9E%90-5"><span class="nav-number">6.4.</span> <span class="nav-text">解法分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E8%83%BD%E9%87%8F%E9%A1%B9%E9%93%BE-energy"><span class="nav-number">7.</span> <span class="nav-text">7. 能量项链(energy)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0-6"><span class="nav-number">7.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E6%A0%BC%E5%BC%8F-6"><span class="nav-number">7.2.</span> <span class="nav-text">输入格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E6%A0%BC%E5%BC%8F-6"><span class="nav-number">7.3.</span> <span class="nav-text">输出格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E6%B3%95%E5%88%86%E6%9E%90-6"><span class="nav-number">7.4.</span> <span class="nav-text">解法分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-%E4%BC%A0%E7%BA%B8%E6%9D%A1-message"><span class="nav-number">8.</span> <span class="nav-text">8. 传纸条(message)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0-7"><span class="nav-number">8.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E6%A0%BC%E5%BC%8F-7"><span class="nav-number">8.2.</span> <span class="nav-text">输入格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E6%A0%BC%E5%BC%8F-7"><span class="nav-number">8.3.</span> <span class="nav-text">输出格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E6%B3%95%E5%88%86%E6%9E%90-7"><span class="nav-number">8.4.</span> <span class="nav-text">解法分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-%E7%AD%B7%E5%AD%90-chop"><span class="nav-number">9.</span> <span class="nav-text">9. 筷子(chop)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0-8"><span class="nav-number">9.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E6%A0%BC%E5%BC%8F-8"><span class="nav-number">9.2.</span> <span class="nav-text">输入格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E6%A0%BC%E5%BC%8F-8"><span class="nav-number">9.3.</span> <span class="nav-text">输出格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E6%B3%95%E5%88%86%E6%9E%90-8"><span class="nav-number">9.4.</span> <span class="nav-text">解法分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-%E5%90%88%E5%B9%B6%E7%9F%B3%E5%AD%90-merge"><span class="nav-number">10.</span> <span class="nav-text">10. 合并石子(merge)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0-9"><span class="nav-number">10.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E6%A0%BC%E5%BC%8F-9"><span class="nav-number">10.2.</span> <span class="nav-text">输入格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E6%A0%BC%E5%BC%8F-9"><span class="nav-number">10.3.</span> <span class="nav-text">输出格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E6%B3%95%E5%88%86%E6%9E%90-9"><span class="nav-number">10.4.</span> <span class="nav-text">解法分析</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
