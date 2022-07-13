@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"willhou936.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="读完这篇文章，扫除细节带来的困扰！">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【专题】那些被忽略的细节">
+<meta property="og:url" content="http://willhou936.github.io/2022/07/13/topic-basicalg/index.html">
+<meta property="og:site_name" content="WillHou&#39;s Blog">
+<meta property="og:description" content="读完这篇文章，扫除细节带来的困扰！">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-07-13T04:18:08.000Z">
+<meta property="article:modified_time" content="2022-07-13T05:30:49.914Z">
+<meta property="article:author" content="Will Hou">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="算法基础">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://willhou936.github.io/2022/07/13/topic-basicalg/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>【专题】那些被忽略的细节 | WillHou's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">WillHou's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">11</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">4</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">12</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://willhou936.github.io/2022/07/13/topic-basicalg/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://pic.iqy.ink/i/2022/06/04/629b09d9cf67a.png">
+      <meta itemprop="name" content="Will Hou">
+      <meta itemprop="description" content="Student x OIer">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="WillHou's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【专题】那些被忽略的细节
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-07-13 12:18:08" itemprop="dateCreated datePublished" datetime="2022-07-13T12:18:08+08:00">2022-07-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E4%B8%93%E9%A2%98/" itemprop="url" rel="index"><span itemprop="name">专题</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/07/13/topic-basicalg/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/07/13/topic-basicalg/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+            <div class="post-description">读完这篇文章，扫除细节带来的困扰！</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="关于浮点数">1. 关于浮点数</h3>
+<p>请先阅读下面的程序，并猜测输出：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cmath&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">double</span> eps = <span class="number">1e-6</span>;</span><br><span class="line"><span class="type">double</span> x = <span class="number">5.2</span>, y = <span class="number">5.1</span> + <span class="number">0.1</span>;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, x == y);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, x &lt; y);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, x &gt; y);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%e\n&quot;</span>, x - y); <span class="comment">// %e 是科学计数法的意思</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, <span class="built_in">fabs</span>(x-y) &lt; eps);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, x &gt; y + eps);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>大多数同学预测的输出应该是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1</span><br><span class="line">0</span><br><span class="line">0</span><br><span class="line">0</span><br><span class="line">1</span><br><span class="line">0</span><br></pre></td></tr></table></figure>
+<p>然而，正确的输出应该是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">0</span><br><span class="line">0</span><br><span class="line">1</span><br><span class="line">8.88178e-16</span><br><span class="line">1</span><br><span class="line">0</span><br></pre></td></tr></table></figure>
+<p>是不是令你大吃一惊呢？让我来解释一下这个现象的原因。说到底，就是一个精度问题。</p>
+<p>系统中的数据都是以二进制形式存储的。</p>
+<p>例如：<span class="math inline">\(114514 =
+2^{1}+2^{4}+2^{6}+2^{8}+2^{9}+2^{10}+2^{11}+2^{12}+2^{13}+2^{15}+2^{16}\)</span></p>
+<p>在存储小数的时候，可能会遇到精度不够的问题。这就导致了在存储时与原数会有一点点的差距。差距一般在
+<span class="math inline">\(0.000001\)</span>
+左右。所以，当我们想要判断两个浮点数是否相等时，只需判断两数之差是否小于
+<span class="math inline">\(0.000001\)</span>
+即可。如果小于，则判断两个浮点数相等（如前面的程序的第 <span
+class="math inline">\(10\)</span> 行所示）。</p>
+<p>同理，我们可以推出 <span class="math inline">\(&gt;\ &lt;\ \leq\
+\geq\)</span> 的判断式（<span
+class="math inline">\(eps=10^{-6}\)</span>）：</p>
+<table>
+<thead>
+<tr class="header">
+<th>判断内容</th>
+<th>具体写法</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>判断浮点数 <code>==</code></td>
+<td><code>fabs(x-y) &lt; eps</code></td>
+</tr>
+<tr class="even">
+<td>判断浮点数 <code>&gt;</code></td>
+<td><code>x &gt; y + eps</code></td>
+</tr>
+<tr class="odd">
+<td>判断浮点数 <code>&lt;</code></td>
+<td><code>x &lt; y - eps</code></td>
+</tr>
+<tr class="even">
+<td>判断浮点数 <code>&gt;=</code></td>
+<td><code>x &gt; y - eps</code></td>
+</tr>
+<tr class="odd">
+<td>判断浮点数 <code>&lt;=</code></td>
+<td><code>x &lt; y + eps</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="关于输出">2. 关于输出</h3>
+<p>输出，那各位可再熟悉不过了。可别小看了输出，其中依然有坑。</p>
+<p>常见的输出函数有四种：<code>cout</code>、<code>printf</code>、<code>puts</code>、<code>putchar</code>。关于它们的用法，请出门左转到
+CSDN。</p>
+<p>我们还是先来看一段程序。这段程序从是我的 <a
+href="https://willhou936.github.io/2022/06/26/fun-homo/">这篇博客</a>
+中摘录的。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">32</span>;</span><br><span class="line"><span class="type">int</span> n, a[N];</span><br><span class="line"><span class="type">bool</span> isFirst = <span class="literal">true</span>;</span><br><span class="line">string s[N] = &#123;<span class="string">&quot;&quot;</span>, <span class="string">&quot;11/(45-1)*4&quot;</span>, <span class="string">&quot;-11+4-5+14&quot;</span>, <span class="string">&quot;-11-4+5+14&quot;</span>, <span class="string">&quot;11-4+5/1-4&quot;</span>, <span class="string">&quot;11-4-5+14&quot;</span>, <span class="string">&quot;1*1+45-14&quot;</span>, <span class="string">&quot;11*4+5*1*4&quot;</span>, <span class="string">&quot;1+1+(4+5)*14&quot;</span>, <span class="string">&quot;(114-51)*4+(-11-4+5+14)&quot;</span>, <span class="string">&quot;1+1-4+514&quot;</span>, <span class="string">&quot;1*(1+4)*51*4+(-11-4+5+14)&quot;</span>, <span class="string">&quot;-11+4*514+(11*-4+51-4)&quot;</span>, <span class="string">&quot;(1+1)*451*4+(11*(45-1)+4)&quot;</span>, <span class="string">&quot;114*5*14+((1+1)*4+51*4)&quot;</span>, <span class="string">&quot;1145*14+((11-4)*51-4+(11/(45-1)*4))&quot;</span>, <span class="string">&quot;114*51*4+((1+1)*4514+(11*45-14+(11*-4+51-4)))&quot;</span>, <span class="string">&quot;114*514+(11*45*14+(-11/4+51/4))&quot;</span>, <span class="string">&quot;114514+(1145*14+(1*14+514))&quot;</span>, <span class="string">&quot;114514*(-11+4-5+14)+(114*51*4+((1+1)*4514+(11+4*51*4+(11-4*5+14))))&quot;</span>, <span class="string">&quot;114514*(-11-4+5+14)+(114*514+(1+14*514+((1+145)*-(1-4)+(11/(45-1)*4))))&quot;</span>, <span class="string">&quot;114514*(11-4+5+1-4)+(1145*14+((11+451)*4+(-1-1+4+5*14)))&quot;</span>, <span class="string">&quot;114514*(1+1+4*5*1-4)+(114*51*4+(11451+4+(1145+14+(1*-1+45-14))))&quot;</span>, <span class="string">&quot;114514*(11+4*5+1+4)+(114*514+(11451+4+(114*-5*(1-4)+(-11+45+1+4))))&quot;</span>, <span class="string">&quot;114514*(1*14*5-1+4)+(114*51*4+(114*51+4+(-11+4+5+14)))&quot;</span>, <span class="string">&quot;114514*(11+45*-(1-4))+(11*4514+(114*5*14+(1+14+514+(11-4+5+1-4))))&quot;</span>, <span class="string">&quot;114514*(11+4*5*14+(-11+4-5+14))+(114*(5-1)*4+(1-14+5+14))&quot;</span>, <span class="string">&quot;114514*(114*5+14+(-11+4-5+14))+((1+1)*451*4+(11+45/1-4))&quot;</span>, <span class="string">&quot;114514*(1145+14+(1*14-5/1+4))+(1+14*514+(114-5+14))&quot;</span>, <span class="string">&quot;114514*(114*5*1*4+(11*4+5*1*4))+(1+14514+(-1-14*(5-14)))&quot;</span>, <span class="string">&quot;114514*((1145+1)*4+(114-5-1-4))+(114*51*4+(114*51+4+(11*4*5-14)))&quot;</span>, <span class="string">&quot;114514*((1+1)*4514+(11*(45-14)+(11-4+5-1-4)))+(11*4514+(114*5*14+(-(1-14)*5*14+(11-4-5+14))))&quot;</span>&#125;;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (isFirst) &#123;</span><br><span class="line">        isFirst = <span class="literal">false</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (s[x][<span class="number">0</span>] != <span class="string">&#x27;-&#x27;</span>) cout &lt;&lt; <span class="string">&#x27;+&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; s[x];</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">BinarySplit</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">30</span>; i &gt;= <span class="number">0</span>; i--)</span><br><span class="line">        <span class="keyword">if</span> ((<span class="number">1</span>&lt;&lt;i) &amp; x)</span><br><span class="line">            <span class="built_in">print</span>(i+<span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">    cin.<span class="built_in">tie</span>(<span class="number">0</span>); cout.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">    cin &gt;&gt; n;</span><br><span class="line">    <span class="built_in">BinarySplit</span>(n);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这是正解程序。但是，一开始，我的 <code>print</code>
+函数是这样写的：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (isFirst) &#123;</span><br><span class="line">        isFirst = <span class="literal">false</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (s[x][<span class="number">0</span>] != <span class="string">&#x27;-&#x27;</span>) <span class="built_in">putchar</span>(<span class="string">&#x27;+&#x27;</span>); <span class="comment">// 区别在这</span></span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; s[x];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>乍一看，似乎没有什么区别。但当我随便输入一个数（例如 <span
+class="math inline">\(114514\)</span>）时，输出是这样的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">++++++++114*514+(11*45*14+(-11/4+51/4))114*51*4+((1+1)*4514+(11*45-14+(11*-4+51-4)))114*5*14+((1+1)*4+51*4)(1+1)*451*4+(11*(45-1)+4)-11+4*514+(11*-4+51-4)1*(1+4)*51*4+(-11-4+5+14)1+1-4+514(114-51)*4+(-11-4+5+14)11*4+5*1*411-4-5+14-11+4-5+14</span><br></pre></td></tr></table></figure>
+<p>我调了半天，也不知道哪里出了问题，索性把 <code>putchar</code> 改成了
+<code>cout</code>。结果发现，问题竟然解决了！</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">114*514+(11*45*14+(-11/4+51/4))+114*51*4+((1+1)*4514+(11*45-14+(11*-4+51-4)))+114*5*14+((1+1)*4+51*4)+(1+1)*451*4+(11*(45-1)+4)-11+4*514+(11*-4+51-4)+1*(1+4)*51*4+(-11-4+5+14)+1+1-4+514+(114-51)*4+(-11-4+5+14)+11*4+5*1*4+11-4-5+14-11+4-5+14</span><br></pre></td></tr></table></figure>
+<p>当时我就懵了。怎么会这样呢？这个问题我到现在也没搞懂。如果有大神知道原因，请不吝指教，谢谢！</p>
+<p>总之，这个例子说明了：千万不要把各种输出混用。<code>C</code>
+风格就全程 <code>C</code> 风格，<code>C++</code> 就全程
+<code>C++</code>。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Will Hou
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://willhou936.github.io/2022/07/13/topic-basicalg/" title="【专题】那些被忽略的细节">http://willhou936.github.io/2022/07/13/topic-basicalg/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/C/" rel="tag"><i class="fa fa-tag"></i> C++</a>
+              <a href="/tags/%E7%AE%97%E6%B3%95%E5%9F%BA%E7%A1%80/" rel="tag"><i class="fa fa-tag"></i> 算法基础</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/07/08/solution-number_reverse/" rel="prev" title="【题解】P1553 数字反转（升级版）">
+      <i class="fa fa-chevron-left"></i> 【题解】P1553 数字反转（升级版）
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E6%B5%AE%E7%82%B9%E6%95%B0"><span class="nav-number">1.</span> <span class="nav-text">1. 关于浮点数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E8%BE%93%E5%87%BA"><span class="nav-number">2.</span> <span class="nav-text">2. 关于输出</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Will Hou"
+      src="https://pic.iqy.ink/i/2022/06/04/629b09d9cf67a.png">
+  <p class="site-author-name" itemprop="name">Will Hou</p>
+  <div class="site-description" itemprop="description">Student x OIer</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/WillHou936" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;WillHou936" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1903176038@qq.com" title="E-Mail → mailto:1903176038@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Will Hou</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'q4W0uCaPdylEMqNydqgNkwnE-gzGzoHsz',
+      appKey     : 'Knwk59zSuB4sEAvfA9nCSC5D',
+      placeholder: "Say something?",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
