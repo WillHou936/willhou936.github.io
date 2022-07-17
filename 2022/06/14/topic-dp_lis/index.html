@@ -27,22 +27,12 @@
 <meta property="og:site_name" content="WillHou&#39;s Blog">
 <meta property="og:description" content="巨详细的最长不下降子序列解析">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/548e2a7a05c94f5db1bc84a33ad124ab.png#pic_center">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/b15a51a5541d4f89b5f1aba564ecaed1.png#pic_center">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/87e2afa3c62045189a036039e958ee27.png#pic_center">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/df1816e89b4b46b39038361a283143fb.png#pic_center">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/2d9b110e9b5543cd887780576a9b9091.png#pic_center">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/10b230bd230d455b9e8dac69f297465d.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAV2lsbEhvdQ==,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/21c8e6680ced4fe7a64584a57306a7ff.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAV2lsbEhvdQ==,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/9da692df63bb42abbce6a9501cdbeb86.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAV2lsbEhvdQ==,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/1c0d3d1451ea4baf80593842d0ce4044.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAV2lsbEhvdQ==,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center">
 <meta property="article:published_time" content="2022-06-14T08:14:06.000Z">
 <meta property="article:modified_time" content="2022-06-27T09:35:56.125Z">
 <meta property="article:author" content="Will Hou">
 <meta property="article:tag" content="C++">
 <meta property="article:tag" content="动态规划">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://img-blog.csdnimg.cn/548e2a7a05c94f5db1bc84a33ad124ab.png#pic_center">
 
 <link rel="canonical" href="http://willhou936.github.io/2022/06/14/topic-dp_lis/">
 
@@ -281,43 +271,94 @@
       
         <p>题目描述就不写了，这题实在太经典了。</p>
 <p>下面重点分析算法：</p>
-<p>大家都知道，这题是一道<strong>动态规划</strong>的入门题。众所周知，动态规划的题都可以通过<strong>搜索</strong>来<del>骗分</del>获得一定的分数。所以，对于这道题，我们仍然可以先用$dfs$写出来。代码较为暴力好懂，就不做解释。这个代码可以获得40-60分(视不同的OJ而定)</p>
+<p>大家都知道，这题是一道<strong>动态规划</strong>的入门题。众所周知，动态规划的题都可以通过<strong>搜索</strong>来<del>骗分</del>获得一定的分数。所以，对于这道题，我们仍然可以先用<span
+class="math inline">\(dfs\)</span>写出来。代码较为暴力好懂，就不做解释。这个代码可以获得40-60分(视不同的OJ而定)</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">109</span>;</span><br><span class="line"><span class="type">int</span> n = <span class="number">1</span>, mx = <span class="number">-1</span>, a[N], ans[N], anss[N];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> cnt)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (x &gt; n)</span><br><span class="line">        <span class="keyword">return</span> ;</span><br><span class="line">    <span class="keyword">if</span> (cnt &gt; mx)</span><br><span class="line">    &#123;</span><br><span class="line">        mx = cnt;</span><br><span class="line">        <span class="built_in">memcpy</span>(anss, ans, N);</span><br><span class="line">        <span class="comment">// printf(&quot;mx=%d\n&quot;, mx);</span></span><br><span class="line">        <span class="comment">// for (int i = 1; i &lt;= mx; i++)</span></span><br><span class="line">        <span class="comment">//     printf(&quot;%d &quot;, ans[i]);</span></span><br><span class="line">        <span class="comment">// puts(&quot;&quot;);</span></span><br><span class="line">        <span class="comment">// puts(&quot;----------&quot;);</span></span><br><span class="line">        <span class="comment">// 这个注释可供大家看看这个程序的处理过程，以便小白更好的理解这段代码</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = x; i &lt;= n; i++)</span><br><span class="line">        <span class="keyword">if</span> (a[i] &gt; ans[cnt])</span><br><span class="line">        &#123;</span><br><span class="line">            ans[++cnt] = a[i];</span><br><span class="line">            <span class="built_in">dfs</span>(i+<span class="number">1</span>, cnt);</span><br><span class="line">            ans[cnt--] = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (~<span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, a + n)) n++; n--;</span><br><span class="line">    <span class="built_in">dfs</span>(<span class="number">1</span>, <span class="number">0</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, mx);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= mx; i++)</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>, anss[i]);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>测试样例：</p>
-<p><img src="https://img-blog.csdnimg.cn/548e2a7a05c94f5db1bc84a33ad124ab.png#pic_center" alt="测试样例"></p>
+<figure>
+<img
+src="https://img-blog.csdnimg.cn/548e2a7a05c94f5db1bc84a33ad124ab.png#pic_center"
+alt="测试样例" />
+<figcaption aria-hidden="true">测试样例</figcaption>
+</figure>
 <p>第一步. 确定状态</p>
-<p>通常处理数列的题目, 我们都有现成的状态划分, 即从第一个数开始, 到第$n$个数结束.<br>$$<br>f[i]代表前i个数中的最长不下降子序列的长度<br>$$<br>这时候有个问题: 第$i$个数我到底是取它还是舍它? 如果不包含$i$, 那就没法写出状态转移方程.</p>
-<p>不妨改成:<br>$$<br>f[i]为前i个数的最长不下降序列的长度, 必须以第i个数结尾<br>$$<br>第二步. 状态转移方程</p>
-<p>为了方便描述, 我们将输入定为为$a$数组, 储存动态规划结果数组定义为$f$数组</p>
-<p>根据状态, 我们推导出状态转移方程: $f[i]=max(f[j])+1$, 其中$a[j]&lt;a[i]且j&lt;i$. 原因可以通过图示来说明.</p>
-<p><img src="https://img-blog.csdnimg.cn/b15a51a5541d4f89b5f1aba564ecaed1.png#pic_center"></p>
-<p>易得$f[1]=1$, 因为它独立成为一个最长不下降子序列</p>
-<p><img src="https://img-blog.csdnimg.cn/87e2afa3c62045189a036039e958ee27.png#pic_center"></p>
-<p>因为$7&lt;13$, 所以不存在$a[j]&lt;a[i]且j&lt;i$.</p>
-<p><img src="https://img-blog.csdnimg.cn/df1816e89b4b46b39038361a283143fb.png#pic_center"></p>
-<p>此时, 存在$7&lt;9$, 所以$mx=f[2]=1$. $f[3]=mx+1=2$.</p>
-<p><img src="https://img-blog.csdnimg.cn/2d9b110e9b5543cd887780576a9b9091.png#pic_center"></p>
-<p>此时, 存在$7&lt;16,9&lt;16$, 所以$mx=max(f[2],f[3])=f[3]=2$. $f[4]=mx+1=3$</p>
-<p>以此类推… 直至算到$f[14]$, 结束循环. 此时, <code>max&#123;f[i]&#125;</code>即为答案.</p>
+<p>通常处理数列的题目, 我们都有现成的状态划分, 即从第一个数开始,
+到第<span class="math inline">\(n\)</span>个数结束. <span
+class="math display">\[
+f[i]代表前i个数中的最长不下降子序列的长度
+\]</span> 这时候有个问题: 第<span
+class="math inline">\(i\)</span>个数我到底是取它还是舍它?
+如果不包含<span class="math inline">\(i\)</span>,
+那就没法写出状态转移方程.</p>
+<p>不妨改成: <span class="math display">\[
+f[i]为前i个数的最长不下降序列的长度, 必须以第i个数结尾
+\]</span> 第二步. 状态转移方程</p>
+<p>为了方便描述, 我们将输入定为为<span
+class="math inline">\(a\)</span>数组, 储存动态规划结果数组定义为<span
+class="math inline">\(f\)</span>数组</p>
+<p>根据状态, 我们推导出状态转移方程: <span
+class="math inline">\(f[i]=max(f[j])+1\)</span>, 其中<span
+class="math inline">\(a[j]&lt;a[i]且j&lt;i\)</span>.
+原因可以通过图示来说明.</p>
+<p><img
+src="https://img-blog.csdnimg.cn/b15a51a5541d4f89b5f1aba564ecaed1.png#pic_center" /></p>
+<p>易得<span class="math inline">\(f[1]=1\)</span>,
+因为它独立成为一个最长不下降子序列</p>
+<p><img
+src="https://img-blog.csdnimg.cn/87e2afa3c62045189a036039e958ee27.png#pic_center" /></p>
+<p>因为<span class="math inline">\(7&lt;13\)</span>, 所以不存在<span
+class="math inline">\(a[j]&lt;a[i]且j&lt;i\)</span>.</p>
+<p><img
+src="https://img-blog.csdnimg.cn/df1816e89b4b46b39038361a283143fb.png#pic_center" /></p>
+<p>此时, 存在<span class="math inline">\(7&lt;9\)</span>, 所以<span
+class="math inline">\(mx=f[2]=1\)</span>. <span
+class="math inline">\(f[3]=mx+1=2\)</span>.</p>
+<p><img
+src="https://img-blog.csdnimg.cn/2d9b110e9b5543cd887780576a9b9091.png#pic_center" /></p>
+<p>此时, 存在<span class="math inline">\(7&lt;16,9&lt;16\)</span>,
+所以<span class="math inline">\(mx=max(f[2],f[3])=f[3]=2\)</span>. <span
+class="math inline">\(f[4]=mx+1=3\)</span></p>
+<p>以此类推... 直至算到<span class="math inline">\(f[14]\)</span>,
+结束循环. 此时, <code>max&#123;f[i]&#125;</code>即为答案.</p>
 <p>因此, 有以下代码:</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">109</span>;</span><br><span class="line"><span class="type">int</span> n = <span class="number">1</span>, ans, a[N], f[N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (~<span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, a + n)) n++; n--;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span> mx = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">1</span>; j &lt; i; j++)</span><br><span class="line">            <span class="keyword">if</span> (a[j]&lt;a[i] <span class="keyword">and</span> mx&lt;f[j])</span><br><span class="line">                mx = f[j];</span><br><span class="line">        f[i] = mx + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (f[i] &gt; ans)</span><br><span class="line">            ans = f[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, ans);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>部分OJ还要求输出最长不下降序列. 这似乎很难写, 实际上我们只需要加一个数组和一个变量就可以搞定.</p>
-<p>为了方便描述, 我们将元素$i$的前驱定为$pre[i]$.</p>
-<p>找出所有满足$a[j]&lt;a[i]且j&lt;i$的$j$. 求出<code>max&#123;a[j]&#125;</code>的下标$id$, 那么记录$pre[i]=id$. 可以通过图示来帮助更好的理解.</p>
-<p><img src="https://img-blog.csdnimg.cn/10b230bd230d455b9e8dac69f297465d.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAV2lsbEhvdQ==,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center"></p>
-<p>$pre[1]$没有前驱, 故$pre[1]=0$.</p>
-<p><img src="https://img-blog.csdnimg.cn/21c8e6680ced4fe7a64584a57306a7ff.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAV2lsbEhvdQ==,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center"></p>
-<p>$7$之前没有比它大的, 所以$pre[2]=0$.</p>
-<p><img src="https://img-blog.csdnimg.cn/9da692df63bb42abbce6a9501cdbeb86.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAV2lsbEhvdQ==,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center"></p>
-<p>$9$之前有$7&lt;9$, 所以$pre[3]=max{a[j]}的下标=a[2]的下标=2$.</p>
-<p><img src="https://img-blog.csdnimg.cn/1c0d3d1451ea4baf80593842d0ce4044.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAV2lsbEhvdQ==,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center"></p>
-<p>$16$之前有$7&lt;16,9&lt;16$, 所以$pre[4]=max{a[j]}的下标=a[3]的下标=3$.</p>
-<p>以此类推… 直至$pre[14]$, 然后递归$print(pre[max{f[i]的下标}])$, 直至$x=0$结束输出.</p>
-<p>因此, 有如下代码: (代码中的$sid$即上文分析中的$id$)</p>
+<p>部分OJ还要求输出最长不下降序列. 这似乎很难写,
+实际上我们只需要加一个数组和一个变量就可以搞定.</p>
+<p>为了方便描述, 我们将元素<span
+class="math inline">\(i\)</span>的前驱定为<span
+class="math inline">\(pre[i]\)</span>.</p>
+<p>找出所有满足<span
+class="math inline">\(a[j]&lt;a[i]且j&lt;i\)</span>的<span
+class="math inline">\(j\)</span>. 求出<code>max&#123;a[j]&#125;</code>的下标<span
+class="math inline">\(id\)</span>, 那么记录<span
+class="math inline">\(pre[i]=id\)</span>.
+可以通过图示来帮助更好的理解.</p>
+<p><img
+src="https://img-blog.csdnimg.cn/10b230bd230d455b9e8dac69f297465d.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAV2lsbEhvdQ==,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center" /></p>
+<p><span class="math inline">\(pre[1]\)</span>没有前驱, 故<span
+class="math inline">\(pre[1]=0\)</span>.</p>
+<p><img
+src="https://img-blog.csdnimg.cn/21c8e6680ced4fe7a64584a57306a7ff.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAV2lsbEhvdQ==,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center" /></p>
+<p><span class="math inline">\(7\)</span>之前没有比它大的, 所以<span
+class="math inline">\(pre[2]=0\)</span>.</p>
+<p><img
+src="https://img-blog.csdnimg.cn/9da692df63bb42abbce6a9501cdbeb86.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAV2lsbEhvdQ==,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center" /></p>
+<p><span class="math inline">\(9\)</span>之前有<span
+class="math inline">\(7&lt;9\)</span>, 所以<span
+class="math inline">\(pre[3]=max\{a[j]\}的下标=a[2]的下标=2\)</span>.</p>
+<p><img
+src="https://img-blog.csdnimg.cn/1c0d3d1451ea4baf80593842d0ce4044.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAV2lsbEhvdQ==,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center" /></p>
+<p><span class="math inline">\(16\)</span>之前有<span
+class="math inline">\(7&lt;16,9&lt;16\)</span>, 所以<span
+class="math inline">\(pre[4]=max\{a[j]\}的下标=a[3]的下标=3\)</span>.</p>
+<p>以此类推... 直至<span class="math inline">\(pre[14]\)</span>,
+然后递归<span
+class="math inline">\(print(pre[max\{f[i]的下标\}])\)</span>, 直至<span
+class="math inline">\(x=0\)</span>结束输出.</p>
+<p>因此, 有如下代码: (代码中的<span
+class="math inline">\(sid\)</span>即上文分析中的<span
+class="math inline">\(id\)</span>)</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">109</span>;</span><br><span class="line"><span class="type">int</span> n = <span class="number">1</span>, ans, sid, a[N], f[N], pre[N];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">(<span class="type">int</span> x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (x == <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> ;</span><br><span class="line">    <span class="built_in">print</span>(pre[x]);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>, a[x]);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (~<span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, a + n)) n++; n--;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span> mx = <span class="number">0</span>, id = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">1</span>; j &lt; i; j++)</span><br><span class="line">            <span class="keyword">if</span> (a[j]&lt;a[i] <span class="keyword">and</span> mx&lt;f[j])</span><br><span class="line">                mx = f[j], id = j;</span><br><span class="line">        f[i] = mx + <span class="number">1</span>, pre[i] = id;</span><br><span class="line">        <span class="keyword">if</span> (f[i] &gt; ans)</span><br><span class="line">        &#123;</span><br><span class="line">            ans = f[i];</span><br><span class="line">            sid = i;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, ans);</span><br><span class="line">    <span class="built_in">print</span>(sid);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 
     </div>
 
