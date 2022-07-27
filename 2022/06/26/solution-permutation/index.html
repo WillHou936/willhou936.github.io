@@ -20,21 +20,24 @@
     var CONFIG = {"hostname":"willhou936.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
   </script>
 
-  <meta name="description" content="原题链接点我跳转 题解本题最容易想到的两种解法是 DFS 与 STL 这两种解法。我对前两种解法不作解释。 普通解法(dfs): 12345678910111213141516171819202122#include &lt;iostream&gt;int n, a[19];bool st[19];void dfs(int k) &amp;#123;    if (k &gt; n) &amp;#123;">
+  <meta name="description" content="提供了全排列问题的四种解法">
 <meta property="og:type" content="article">
-<meta property="og:title" content="WillHou&#39;s Blog">
+<meta property="og:title" content="【题解】全排列问题的详解">
 <meta property="og:url" content="http://willhou936.github.io/2022/06/26/solution-permutation/index.html">
 <meta property="og:site_name" content="WillHou&#39;s Blog">
-<meta property="og:description" content="原题链接点我跳转 题解本题最容易想到的两种解法是 DFS 与 STL 这两种解法。我对前两种解法不作解释。 普通解法(dfs): 12345678910111213141516171819202122#include &lt;iostream&gt;int n, a[19];bool st[19];void dfs(int k) &amp;#123;    if (k &gt; n) &amp;#123;">
+<meta property="og:description" content="提供了全排列问题的四种解法">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/81627f30c161f887ffd41f265afd49a9.png">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/732b126abf0d03dc0ed1b6a5484c8caa.png">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/0d0398348adcfc4302ac230176298062.png">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/bb43d4e3d1cc171105115b6b941157b0.png">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/88ce38e6bb0495f6ff74f83414321240.png">
-<meta property="article:published_time" content="2022-06-26T05:42:03.774Z">
-<meta property="article:modified_time" content="2022-07-27T14:27:47.424Z">
+<meta property="article:published_time" content="2022-06-25T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-07-27T14:47:50.504Z">
 <meta property="article:author" content="Will Hou">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="深搜">
+<meta property="article:tag" content="位运算">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://img-blog.csdnimg.cn/img_convert/81627f30c161f887ffd41f265afd49a9.png">
 
@@ -51,7 +54,7 @@
   };
 </script>
 
-  <title> | WillHou's Blog</title>
+  <title>【题解】全排列问题的详解 | WillHou's Blog</title>
   
 
 
@@ -131,7 +134,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">10</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">12</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -218,7 +221,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          
+          【题解】全排列问题的详解
         </h1>
 
         <div class="post-meta">
@@ -229,7 +232,16 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2022-06-26 13:42:03" itemprop="dateCreated datePublished" datetime="2022-06-26T13:42:03+08:00">2022-06-26</time>
+              <time title="创建时间：2022-06-26 00:00:00" itemprop="dateCreated datePublished" datetime="2022-06-26T00:00:00+08:00">2022-06-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%A2%98%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">题解</span></a>
+                </span>
             </span>
 
           
@@ -254,6 +266,7 @@
   </span>
   
   
+            <div class="post-description">提供了全排列问题的四种解法</div>
         </div>
       </header>
 
@@ -310,7 +323,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://willhou936.github.io/2022/06/26/solution-permutation/" title="">http://willhou936.github.io/2022/06/26/solution-permutation/</a>
+    <a href="http://willhou936.github.io/2022/06/26/solution-permutation/" title="【题解】全排列问题的详解">http://willhou936.github.io/2022/06/26/solution-permutation/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -320,6 +333,12 @@
 
 
       <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/C/" rel="tag"><i class="fa fa-tag"></i> C++</a>
+              <a href="/tags/%E6%B7%B1%E6%90%9C/" rel="tag"><i class="fa fa-tag"></i> 深搜</a>
+              <a href="/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/" rel="tag"><i class="fa fa-tag"></i> 位运算</a>
+          </div>
 
         
 
@@ -327,12 +346,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2022/06/26/solution-xor_sq/" rel="prev" title="【题解】异或序列">
-      <i class="fa fa-chevron-left"></i> 【题解】异或序列
+    <a href="/2022/06/14/topic-ds_stack/" rel="prev" title="【专题】栈">
+      <i class="fa fa-chevron-left"></i> 【专题】栈
     </a></div>
       <div class="post-nav-item">
-    <a href="/2022/06/26/fun-homo/" rel="next" title="【趣味】恶臭数字论证器">
-      【趣味】恶臭数字论证器 <i class="fa fa-chevron-right"></i>
+    <a href="/2022/06/26/solution-csp_test_1/" rel="next" title="【题解】CSP 模拟赛第一场题解">
+      【题解】CSP 模拟赛第一场题解 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -422,7 +441,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
