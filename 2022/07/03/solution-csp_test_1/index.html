@@ -20,24 +20,21 @@
     var CONFIG = {"hostname":"willhou936.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
   </script>
 
-  <meta name="description" content="MFSTEM CSP-J 第一场模拟赛题解">
+  <meta name="description" content="T1. 不重最长子串Link：点我跳转 题目概括：给定一个字符串 $s$，找出其中不含有重复字符的最长子串的长度。字符串由英文字母、数字和空格组成。长度在 $0\sim 50000$ 之间 关于子串的定义，请出门右转到百度百科 一道水题，但还是有亿些技巧。 技巧：loc[i] 标记 $i$ 出现的位置，求最长 &#x2F; 不重复问题时会使用到。具体到这一题，loc[i] 表示第 $i$ 个字符上一次出现的">
 <meta property="og:type" content="article">
-<meta property="og:title" content="【题解】CSP-J集体测试1">
+<meta property="og:title" content="WillHou&#39;s Blog">
 <meta property="og:url" content="http://willhou936.github.io/2022/07/03/solution-csp_test_1/index.html">
 <meta property="og:site_name" content="WillHou&#39;s Blog">
-<meta property="og:description" content="MFSTEM CSP-J 第一场模拟赛题解">
+<meta property="og:description" content="T1. 不重最长子串Link：点我跳转 题目概括：给定一个字符串 $s$，找出其中不含有重复字符的最长子串的长度。字符串由英文字母、数字和空格组成。长度在 $0\sim 50000$ 之间 关于子串的定义，请出门右转到百度百科 一道水题，但还是有亿些技巧。 技巧：loc[i] 标记 $i$ 出现的位置，求最长 &#x2F; 不重复问题时会使用到。具体到这一题，loc[i] 表示第 $i$ 个字符上一次出现的">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://pic.iqy.ink/i/2022/07/03/62c153971e802.png">
-<meta property="og:image" content="https://pic.iqy.ink/i/2022/07/03/62c15b4bcdb27.png">
-<meta property="article:published_time" content="2022-07-03T12:00:00.000Z">
-<meta property="article:modified_time" content="2022-07-06T07:54:54.862Z">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/219745618ccb15d7b9abcdd2351044a1.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/053140d295aea3fd2fe0ca0de02874e1.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/3de8602ec3c8120adb01f9d03bfcb84d.png">
+<meta property="article:published_time" content="2022-07-03T10:50:11.143Z">
+<meta property="article:modified_time" content="2022-07-27T14:27:10.646Z">
 <meta property="article:author" content="Will Hou">
-<meta property="article:tag" content="C++">
-<meta property="article:tag" content="算法基础">
-<meta property="article:tag" content="字符串">
-<meta property="article:tag" content="动态规划">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://pic.iqy.ink/i/2022/07/03/62c153971e802.png">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/img_convert/219745618ccb15d7b9abcdd2351044a1.png">
 
 <link rel="canonical" href="http://willhou936.github.io/2022/07/03/solution-csp_test_1/">
 
@@ -52,7 +49,7 @@
   };
 </script>
 
-  <title>【题解】CSP-J集体测试1 | WillHou's Blog</title>
+  <title> | WillHou's Blog</title>
   
 
 
@@ -132,7 +129,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">12</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">10</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -219,7 +216,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          【题解】CSP-J集体测试1
+          
         </h1>
 
         <div class="post-meta">
@@ -230,16 +227,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2022-07-03 20:00:00" itemprop="dateCreated datePublished" datetime="2022-07-03T20:00:00+08:00">2022-07-03</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%A2%98%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">题解</span></a>
-                </span>
+              <time title="创建时间：2022-07-03 18:50:11" itemprop="dateCreated datePublished" datetime="2022-07-03T18:50:11+08:00">2022-07-03</time>
             </span>
 
           
@@ -264,7 +252,6 @@
   </span>
   
   
-            <div class="post-description">MFSTEM CSP-J 第一场模拟赛题解</div>
         </div>
       </header>
 
@@ -274,131 +261,71 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h3 id="t1.-不重最长子串">T1. 不重最长子串</h3>
-<p>Link：<a target="_blank" rel="noopener" href="https://www.mfstem.org/p/1340">点我跳转</a></p>
-<p>题目概括：给定一个字符串 <span
-class="math inline">\(s\)</span>，找出其中不含有重复字符的<strong>最长子串</strong>的长度。字符串由英文字母、数字和空格组成。长度在
-<span class="math inline">\(0\sim 50000\)</span> 之间</p>
-<p>关于子串的定义，请出门右转到<a
-target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%AD%90%E4%B8%B2/11047664">百度百科</a></p>
+        <h3 id="T1-不重最长子串"><a href="#T1-不重最长子串" class="headerlink" title="T1. 不重最长子串"></a>T1. 不重最长子串</h3><p>Link：<a target="_blank" rel="noopener" href="https://www.mfstem.org/p/1340">点我跳转</a></p>
+<p>题目概括：给定一个字符串 $s$，找出其中不含有重复字符的<strong>最长子串</strong>的长度。字符串由英文字母、数字和空格组成。长度在 $0\sim 50000$ 之间</p>
+<p>关于子串的定义，请出门右转到<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%AD%90%E4%B8%B2/11047664">百度百科</a></p>
 <p>一道水题，但还是有亿些技巧。</p>
-<p>技巧：<code>loc[i]</code> 标记 <span class="math inline">\(i\)</span>
-出现的位置，求最长 /
-不重复问题时会使用到。具体到这一题，<code>loc[i]</code> 表示第 <span
-class="math inline">\(i\)</span> 个字符上一次出现的位置。</p>
-<p>记录每一个字符之前相同字符出现的位置，否则初始位置全部为 <span
-class="math inline">\(-1\)</span>，也可以直接计算，每一次计算可以形成最长的序列长度然后更新。</p>
+<p>技巧：<code>loc[i]</code> 标记 $i$ 出现的位置，求最长 / 不重复问题时会使用到。具体到这一题，<code>loc[i]</code> 表示第 $i$ 个字符上一次出现的位置。</p>
+<p>记录每一个字符之前相同字符出现的位置，否则初始位置全部为 $-1$，也可以直接计算，每一次计算可以形成最长的序列长度然后更新。</p>
 <p>核心思想：先定后配。即枚举一个端点，匹配另一个端点。具体到这一题，是枚举右端点，匹配左端点。</p>
-<p>需要注意的是这个大坑：字符串也可以由<strong>空格</strong>组成。所以一定要用
-<code>getline</code>。</p>
+<p>需要注意的是这个大坑：字符串也可以由<strong>空格</strong>组成。所以一定要用 <code>getline</code>。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">5e4</span> + <span class="number">9</span>;</span><br><span class="line"><span class="type">int</span> ans, pos[N], loc[<span class="number">130</span>];</span><br><span class="line">string s;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">getline</span>(cin, s);</span><br><span class="line">    <span class="built_in">memset</span>(loc, <span class="number">-1</span>, <span class="keyword">sizeof</span> loc);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; s.<span class="built_in">size</span>(); i++)</span><br><span class="line">        pos[i] = loc[s[i]], loc[s[i]] = i;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>, j = <span class="number">0</span>; j &lt; s.<span class="built_in">size</span>(); j++) &#123; <span class="comment">// i-left, j-right</span></span><br><span class="line">        <span class="keyword">if</span> (pos[j] &gt;= i) i = pos[j] + <span class="number">1</span>;</span><br><span class="line">        ans = j-i+<span class="number">1</span> &gt; ans ? j-i+<span class="number">1</span> : ans;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, ans);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>还有这种写法，是比较好想到的，就不做过多的解释，看注释即可。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">130</span>;</span><br><span class="line"><span class="type">int</span> loc[N], l, mx; <span class="comment">// l-左端点</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    string s;</span><br><span class="line">    <span class="built_in">getline</span>(cin, s);</span><br><span class="line">    <span class="built_in">memset</span>(loc, <span class="number">-1</span>, <span class="keyword">sizeof</span> loc);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; s.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (loc[s[i]] &gt;= l) &#123; <span class="comment">// 出现了两次</span></span><br><span class="line">            l = loc[s[i]] + <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            mx = <span class="built_in">max</span>(mx, i-l+<span class="number">1</span>); <span class="comment">// 更新最大值</span></span><br><span class="line">        &#125;</span><br><span class="line">        loc[s[i]] = i; <span class="comment">// 更新上一次出现的位置</span></span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; mx;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="t2.-小j的加密算法">T2. 小J的加密算法</h3>
-<p>Link：<a target="_blank" rel="noopener" href="https://www.mfstem.org/p/1341">点我跳转</a></p>
-<p>题目概括：输入一个字符串，将其按照 <code>Z</code>
-字形重新排列，输出排列后的样子。例如：有字符串
-<code>LSRDCYJDL</code>，<code>Z</code> 字形的行数为 <span
-class="math inline">\(3\)</span>，该字符串应该长这样：</p>
+
+<h3 id="T2-小J的加密算法"><a href="#T2-小J的加密算法" class="headerlink" title="T2. 小J的加密算法"></a>T2. 小J的加密算法</h3><p>Link：<a target="_blank" rel="noopener" href="https://www.mfstem.org/p/1341">点我跳转</a></p>
+<p>题目概括：输入一个字符串，将其按照 <code>Z</code> 字形重新排列，输出排列后的样子。例如：有字符串 <code>LSRDCYJDL</code>，<code>Z</code> 字形的行数为 $3$，该字符串应该长这样：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">L   C   L</span><br><span class="line">S D Y D</span><br><span class="line">R   J</span><br></pre></td></tr></table></figure>
+
 <p>输出应该长这样（按行输出）：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LCLSDYDRJ</span><br></pre></td></tr></table></figure>
+
 <p><del>（关于这个字符串的意思，我不敢多说，有知道的评论区见）</del></p>
 <p>水题，找规律即可。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">1009</span>;</span><br><span class="line"><span class="type">int</span> col, c;</span><br><span class="line"><span class="type">char</span> m[N][N];</span><br><span class="line">string s;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    cin &gt;&gt; s &gt;&gt; c;</span><br><span class="line">    <span class="keyword">if</span> (c == <span class="number">1</span>) &#123;</span><br><span class="line">        cout &lt;&lt; s;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>, r = <span class="number">0</span>; i &lt; s.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (col%(c<span class="number">-1</span>) == <span class="number">0</span>) &#123;</span><br><span class="line">            m[r++][col] = s[i];</span><br><span class="line">            <span class="keyword">if</span> (r == c)</span><br><span class="line">                r = c - <span class="number">2</span>, col++;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            m[r--][col++] = s[i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; c; i++)</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt;= col; j++)</span><br><span class="line">            <span class="keyword">if</span> (m[i][j])</span><br><span class="line">                <span class="built_in">putchar</span>(m[i][j]);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="t3.-数列的个数">T3. 数列的个数</h3>
-<p>Link：<a target="_blank" rel="noopener" href="https://www.mfstem.org/p/1342">点我跳转</a></p>
-<p>题目概括：给出两个整数 <span class="math inline">\(n,
-m\)</span>。问有多少个长度为 <span class="math inline">\(n\)</span>
-的序列 <span class="math inline">\(A\)</span>，满足以下条件：</p>
+
+<h3 id="T3-数列的个数"><a href="#T3-数列的个数" class="headerlink" title="T3. 数列的个数"></a>T3. 数列的个数</h3><p>Link：<a target="_blank" rel="noopener" href="https://www.mfstem.org/p/1342">点我跳转</a></p>
+<p>题目概括：给出两个整数 $n, m$。问有多少个长度为 $n$ 的序列 $A$，满足以下条件：</p>
 <ul>
-<li><span class="math inline">\(1 ≤ A_i ≤ m(i = 1, 2,\dots,
-n)\)</span></li>
-<li><span class="math inline">\(\forall i\in [1, n-1]\)</span>，<span
-class="math inline">\(A_{i+1}\)</span> 是 <span
-class="math inline">\(A_i\)</span> 的倍数。</li>
+<li>$1 ≤ A_i ≤ m(i = 1, 2,\dots, n)$</li>
+<li>$\forall i\in [1, n-1]$，$A_{i+1}$ 是 $A_i$ 的倍数。</li>
 </ul>
-<p>由于答案可能很大，所以你只需要输出答案对 <span
-class="math inline">\(998244353\)</span> 取模的结果。</p>
+<p>由于答案可能很大，所以你只需要输出答案对 $998244353$ 取模的结果。</p>
 <p>比较难，放洛谷应该是绿题的水平。</p>
 <p>本题的核心思想仍然是“先定后配”。</p>
 <p>分析过程如下：</p>
 <p><strong>关键词：倍数</strong></p>
-<p>因为 <span class="math inline">\(A_{i+1}\)</span> 是 <span
-class="math inline">\(A_i\)</span> 的倍数，所以 <span
-class="math inline">\(A_i\)</span> 一定是 <span
-class="math inline">\(A_{i+1}\)</span>
-的约数。故这题会用到约数分解。</p>
-<p><strong>找规律</strong> <span class="math inline">\(n=3,
-m=4:\)</span></p>
+<p>因为 $A_{i+1}$ 是 $A_i$ 的倍数，所以 $A_i$ 一定是 $A_{i+1}$ 的约数。故这题会用到约数分解。</p>
+<p><strong>找规律</strong><br>$n=3, m=4:$</p>
 <p>枚举所有情况：</p>
-<p><img src="https://pic.iqy.ink/i/2022/07/03/62c153971e802.png" /></p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/219745618ccb15d7b9abcdd2351044a1.png" alt=""></p>
 <p>如果从第一个数开始向后推，并不方便发现规律。不妨先定下最后一个数，往前推前面的数。该思想称为：正难则反。</p>
-<p>例如，以 <span class="math inline">\(4\)</span> 为结尾的数列： <img
-src="https://pic.iqy.ink/i/2022/07/03/62c193200cd8f.png" />
-归结起来，就是： <span class="math display">\[
-\begin{cases}
-    x\stackrel{\times 2^{a}}{\longrightarrow}y\stackrel{\times
-2^{b}}{\longrightarrow}4\\
-    a + b \leq 2
-\end{cases}
-\]</span> 所以，欲求以 <span class="math inline">\(4\)</span>
-结尾的数列的方案数，即是求 <span class="math inline">\(a+b\leq2\)</span>
-有多少种可能。</p>
-<p>方便起见，把 <span class="math inline">\(\leq\)</span> 换成 <span
-class="math inline">\(=\)</span>，我们再设一个未知数 <span
-class="math inline">\(c\)</span> <span class="math display">\[
-a+b+c=2
-\]</span> 这样，我们就把这个问题转换为：有 <span
-class="math inline">\(n\)</span> 个自然数相加的和为 <span
-class="math inline">\(k\)</span>，解有多少种。</p>
+<p>例如，以 $4$ 为结尾的数列：<br><img src="https://img-blog.csdnimg.cn/img_convert/053140d295aea3fd2fe0ca0de02874e1.png" alt=""><br>归结起来，就是：<br>$$<br>\begin{cases}<br>    x\stackrel{\times 2^{a}}{\longrightarrow}y\stackrel{\times 2^{b}}{\longrightarrow}4\<br>    a + b \leq 2<br>\end{cases}<br>$$<br>所以，欲求以 $4$ 结尾的数列的方案数，即是求 $a+b\leq2$ 有多少种可能。</p>
+<p>方便起见，把 $\leq$ 换成 $=$，我们再设一个未知数 $c$<br>$$<br>a+b+c=2<br>$$<br>这样，我们就把这个问题转换为：有 $n$ 个自然数相加的和为 $k$，解有多少种。</p>
 <p>分析这个问题，可以用“隔板法”。注意：此处的隔板法是<strong>允许将多个板子插在一个空中</strong>的。</p>
-<p><img src="https://pic.iqy.ink/i/2022/07/03/62c15b4bcdb27.png" /></p>
-<p>有 <span class="math inline">\(C^{k}_{n-1+k}\)</span>
-种方法。但是这种方法时间复杂度巨大，所以需要借助背包求解。</p>
-<p>令 <code>f[i][j]</code> 表示前 <span class="math inline">\(i\)</span>
-个数用掉 <span class="math inline">\(j\)</span> 个因子后的情况数。</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/3de8602ec3c8120adb01f9d03bfcb84d.png" alt=""></p>
+<p>有 $C^{k}_{n-1+k}$ 种方法。但是这种方法时间复杂度巨大，所以需要借助背包求解。</p>
+<p>令 <code>f[i][j]</code> 表示前 $i$ 个数用掉 $j$ 个因子后的情况数。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">f[i][j] = f[i-1][j] + f[i-1][j-1] + f[i-1][j-2] + ... + f[i-1][0]</span><br><span class="line">        = f[i-1][j] + f[i][j-1] // 完全背包</span><br></pre></td></tr></table></figure>
-<p>降维后：<code>f[j] = f[j] + f[j-1]</code> 即
-<code>f[j] += f[j-1]</code>。</p>
+
+<p>降维后：<code>f[j] = f[j] + f[j-1]</code> 即 <code>f[j] += f[j-1]</code>。</p>
 <p>这样就将组合数预处理出来了。</p>
 <p><del>呼，终于到了上代码时间。码字码了几个小时了。</del></p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> M = <span class="number">998244353</span>;</span><br><span class="line"><span class="type">int</span> f[<span class="number">20</span>] = &#123;<span class="number">1</span>&#125;, n, m;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">solve</span><span class="params">(<span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> ans = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">2</span>; i*i &lt;= k; ++i) &#123;</span><br><span class="line">        <span class="keyword">if</span> (k % i) <span class="keyword">continue</span>;</span><br><span class="line">        <span class="type">int</span> c = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (k%i == <span class="number">0</span>) k /= i, ++c;</span><br><span class="line">        ans = ans * <span class="number">1LL</span> * f[c] % M;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (k &gt; <span class="number">1</span>) ans = ans * <span class="number">1LL</span> * f[<span class="number">1</span>] % M; <span class="comment">// 质数情况</span></span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> ans = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d%d&quot;</span>, &amp;n, &amp;m);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i)</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">1</span>; j &lt;= <span class="number">19</span>; ++j)</span><br><span class="line">            (f[j] += f[j<span class="number">-1</span>]) %= M;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= m; ++i)</span><br><span class="line">        (ans += <span class="built_in">solve</span>(i)) %= M;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, ans);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="t4.-匹配正则表达式">T4. 匹配正则表达式</h3>
-<p>Link：<a target="_blank" rel="noopener" href="https://www.mfstem.org/p/1343">点我跳转</a></p>
-<p>先抖个机灵。C++ 头文件里内带正则表达式 <code>regex</code>
-库，所以只需要调用库函数 <code>regex_match</code> 即可。</p>
-<p>关于 <code>regex</code> 库的更多用法，请参考<a
-target="_blank" rel="noopener" href="https://blog.csdn.net/asialee_bird/article/details/103420321">这篇博客</a></p>
+
+<h3 id="T4-匹配正则表达式"><a href="#T4-匹配正则表达式" class="headerlink" title="T4. 匹配正则表达式"></a>T4. 匹配正则表达式</h3><p>Link：<a target="_blank" rel="noopener" href="https://www.mfstem.org/p/1343">点我跳转</a></p>
+<p>先抖个机灵。C++ 头文件里内带正则表达式 <code>regex</code> 库，所以只需要调用库函数 <code>regex_match</code> 即可。</p>
+<p>关于 <code>regex</code> 库的更多用法，请参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/asialee_bird/article/details/103420321">这篇博客</a></p>
 <p>AC 代码：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;regex&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">string s, p;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (cin &gt;&gt; s &gt;&gt; p) &#123;</span><br><span class="line">        <span class="type">int</span> ans = <span class="built_in">regex_match</span>(s, <span class="built_in">regex</span>(p));</span><br><span class="line">        <span class="keyword">if</span> (ans) &#123;</span><br><span class="line">            <span class="built_in">puts</span>(<span class="string">&quot;Yes&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">puts</span>(<span class="string">&quot;No&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>但这题显然不是考察我们的函数储备量，所以还要介绍下面这个方法。</p>
-<p>本题的思路与 <a
-target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P1439">最长公共子序列(LCS)</a>
-比较相似。<code>f[i][j]</code> 表示 <span
-class="math inline">\(s\)</span> 的前 <span
-class="math inline">\(i\)</span> 个字符与 <span
-class="math inline">\(p\)</span> 中的前 <span
-class="math inline">\(j\)</span>
-个字符是否能够匹配。在进行状态转移时，我们考虑 <span
-class="math inline">\(p\)</span> 的第 <span
-class="math inline">\(j\)</span> 个字符的匹配情况。</p>
-<p><code>p[j]</code> 是一个小写字母 <code>a-z</code>，则
-<code>s[i]</code> 必须也为同样的小写字母方能完成匹配。</p>
-<p>当 <code>p[j] = '.'</code> 时，<code>p[j]</code> 与 <code>s[i]</code>
-一定能匹配成功；</p>
-<p>当 <code>p[j] = '*'</code> 时，表示可对 <code>p[j]</code>
-的前一个字符 <code>p[j−1]</code> 匹配（或理解为复制）任意次（包括 <span
-class="math inline">\(0\)</span> 次）。 <span class="math display">\[
-dp[i][j] =
-\begin{cases}
-\ dp[i-1][j-1],\ s[i]=p[j]\\
-\ dp[i][j-2],\ p[j]=&#39;*&#39;\ \&amp;\ s[i]\ne p[j-1]:\\
-\ dp[i][j-2]\ or\ dp[i-1][j],\ p[j]=&#39;*&#39;\ \&amp;\ s[i]= p[j-1]:
-\end{cases}
-\]</span></p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">string s, p;</span><br><span class="line"><span class="type">bool</span> dp[<span class="number">50</span>][<span class="number">50</span>];</span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">check</span><span class="params">(<span class="type">int</span> i, <span class="type">int</span> j)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (i == <span class="number">0</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">if</span> (p[j<span class="number">-1</span>] == <span class="string">&#x27;.&#x27;</span>) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">return</span> s[i<span class="number">-1</span>] == p[j<span class="number">-1</span>];</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (cin &gt;&gt; s &gt;&gt; p) &#123;</span><br><span class="line">        <span class="type">int</span> m = s.<span class="built_in">size</span>();</span><br><span class="line">        <span class="type">int</span> n = p.<span class="built_in">size</span>();</span><br><span class="line">        <span class="built_in">memset</span>(dp, <span class="literal">false</span>, <span class="keyword">sizeof</span> dp);</span><br><span class="line">        dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt;= m; i++)</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">1</span>; j &lt;= n; j++)</span><br><span class="line">                <span class="keyword">if</span> (p[j<span class="number">-1</span>] == <span class="string">&#x27;*&#x27;</span>) &#123;</span><br><span class="line">                    dp[i][j] |= dp[i][j<span class="number">-2</span>];</span><br><span class="line">                    <span class="keyword">if</span> (<span class="built_in">check</span>(i, j<span class="number">-1</span>))</span><br><span class="line">                        dp[i][j] |= dp[i<span class="number">-1</span>][j];</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">check</span>(i, j)) &#123;</span><br><span class="line">                    dp[i][j] |= dp[i<span class="number">-1</span>][j<span class="number">-1</span>];</span><br><span class="line">                &#125;</span><br><span class="line">        <span class="keyword">if</span> (dp[m][n])</span><br><span class="line">            cout &lt;&lt; <span class="string">&quot;Yes&quot;</span> &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            cout &lt;&lt; <span class="string">&quot;No&quot;</span> &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p>但这题显然不是考察我们的函数储备量，所以还要介绍下面这个方法。</p>
+<p>本题的思路与 <a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P1439">最长公共子序列(LCS)</a> 比较相似。<code>f[i][j]</code> 表示 $s$ 的前 $i$ 个字符与 $p$ 中的前 $j$ 个字符是否能够匹配。在进行状态转移时，我们考虑 $p$ 的第 $j$ 个字符的匹配情况。</p>
+<p><code>p[j]</code> 是一个小写字母 <code>a-z</code>，则 <code>s[i]</code> 必须也为同样的小写字母方能完成匹配。</p>
+<p>当 <code>p[j] = &#39;.&#39;</code> 时，<code>p[j]</code> 与 <code>s[i]</code> 一定能匹配成功；</p>
+<p>当 <code>p[j] = &#39;*&#39;</code> 时，表示可对 <code>p[j]</code> 的前一个字符 <code>p[j−1]</code> 匹配（或理解为复制）任意次（包括 $0$ 次）。<br>$$<br>dp[i][j] =<br>\begin{cases}<br>\ dp[i-1][j-1],\ s[i]=p[j]\<br>\ dp[i][j-2],\ p[j]=’<em>‘\ &amp;\ s[i]\ne p[j-1]:\<br>\ dp[i][j-2]\ or\ dp[i-1][j],\ p[j]=’</em>‘\ &amp;\ s[i]= p[j-1]:<br>\end{cases}<br>$$</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">string s, p;</span><br><span class="line"><span class="type">bool</span> dp[<span class="number">50</span>][<span class="number">50</span>];</span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">check</span><span class="params">(<span class="type">int</span> i, <span class="type">int</span> j)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (i == <span class="number">0</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">if</span> (p[j<span class="number">-1</span>] == <span class="string">&#x27;.&#x27;</span>) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">return</span> s[i<span class="number">-1</span>] == p[j<span class="number">-1</span>];</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (cin &gt;&gt; s &gt;&gt; p) &#123;</span><br><span class="line">        <span class="type">int</span> m = s.<span class="built_in">size</span>();</span><br><span class="line">        <span class="type">int</span> n = p.<span class="built_in">size</span>();</span><br><span class="line">        <span class="built_in">memset</span>(dp, <span class="literal">false</span>, <span class="keyword">sizeof</span> dp);</span><br><span class="line">        dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt;= m; i++)</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">1</span>; j &lt;= n; j++)</span><br><span class="line">                <span class="keyword">if</span> (p[j<span class="number">-1</span>] == <span class="string">&#x27;*&#x27;</span>) &#123;</span><br><span class="line">                    dp[i][j] |= dp[i][j<span class="number">-2</span>];</span><br><span class="line">                    <span class="keyword">if</span> (<span class="built_in">check</span>(i, j<span class="number">-1</span>))</span><br><span class="line">                        dp[i][j] |= dp[i<span class="number">-1</span>][j];</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">check</span>(i, j)) &#123;</span><br><span class="line">                    dp[i][j] |= dp[i<span class="number">-1</span>][j<span class="number">-1</span>];</span><br><span class="line">                &#125;</span><br><span class="line">        <span class="keyword">if</span> (dp[m][n])</span><br><span class="line">            cout &lt;&lt; <span class="string">&quot;Yes&quot;</span> &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            cout &lt;&lt; <span class="string">&quot;No&quot;</span> &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
     </div>
 
     
@@ -413,7 +340,7 @@ dp[i][j] =
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://willhou936.github.io/2022/07/03/solution-csp_test_1/" title="【题解】CSP-J集体测试1">http://willhou936.github.io/2022/07/03/solution-csp_test_1/</a>
+    <a href="http://willhou936.github.io/2022/07/03/solution-csp_test_1/" title="">http://willhou936.github.io/2022/07/03/solution-csp_test_1/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -423,13 +350,6 @@ dp[i][j] =
 
 
       <footer class="post-footer">
-          
-          <div class="post-tags">
-              <a href="/tags/C/" rel="tag"><i class="fa fa-tag"></i> C++</a>
-              <a href="/tags/%E7%AE%97%E6%B3%95%E5%9F%BA%E7%A1%80/" rel="tag"><i class="fa fa-tag"></i> 算法基础</a>
-              <a href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/" rel="tag"><i class="fa fa-tag"></i> 字符串</a>
-              <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag"><i class="fa fa-tag"></i> 动态规划</a>
-          </div>
 
         
 
@@ -437,8 +357,8 @@ dp[i][j] =
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2022/06/27/topic-dfs/" rel="prev" title="【专题】深搜算法">
-      <i class="fa fa-chevron-left"></i> 【专题】深搜算法
+    <a href="/2022/06/27/topic-dfs/" rel="prev" title="">
+      <i class="fa fa-chevron-left"></i> 
     </a></div>
       <div class="post-nav-item">
     <a href="/2022/07/08/solution-number_reverse/" rel="next" title="【题解】P1553 数字反转（升级版）">
@@ -503,7 +423,7 @@ dp[i][j] =
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#t1.-%E4%B8%8D%E9%87%8D%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2"><span class="nav-number">1.</span> <span class="nav-text">T1. 不重最长子串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#t2.-%E5%B0%8Fj%E7%9A%84%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">T2. 小J的加密算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#t3.-%E6%95%B0%E5%88%97%E7%9A%84%E4%B8%AA%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">T3. 数列的个数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#t4.-%E5%8C%B9%E9%85%8D%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-number">4.</span> <span class="nav-text">T4. 匹配正则表达式</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#T1-%E4%B8%8D%E9%87%8D%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2"><span class="nav-number">1.</span> <span class="nav-text">T1. 不重最长子串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#T2-%E5%B0%8FJ%E7%9A%84%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">T2. 小J的加密算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#T3-%E6%95%B0%E5%88%97%E7%9A%84%E4%B8%AA%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">T3. 数列的个数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#T4-%E5%8C%B9%E9%85%8D%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-number">4.</span> <span class="nav-text">T4. 匹配正则表达式</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -532,7 +452,7 @@ dp[i][j] =
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
