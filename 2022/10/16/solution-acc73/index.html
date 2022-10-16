@@ -20,27 +20,23 @@
     var CONFIG = {"hostname":"willhou936.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
   </script>
 
-  <meta name="description" content="环形染色问题详解">
+  <meta name="description" content="AcWing 第73场周赛题解">
 <meta property="og:type" content="article">
-<meta property="og:title" content="【专题】环形染色问题">
-<meta property="og:url" content="http://willhou936.github.io/2022/07/19/topic-math_ring_dyeing/index.html">
+<meta property="og:title" content="【题解】AcWing 第73场周赛题解">
+<meta property="og:url" content="http://willhou936.github.io/2022/10/16/solution-acc73/index.html">
 <meta property="og:site_name" content="WillHou&#39;s Blog">
-<meta property="og:description" content="环形染色问题详解">
+<meta property="og:description" content="AcWing 第73场周赛题解">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://s2.loli.net/2022/07/27/2aKgqkeuyVUQfF9.png">
-<meta property="og:image" content="https://s2.loli.net/2022/07/27/5UeAbSRVoIFZ8zK.png">
-<meta property="og:image" content="https://s2.loli.net/2022/07/27/ksDpK52GSEUfgry.png">
-<meta property="og:image" content="https://s2.loli.net/2022/07/27/vRtPzrEfoi2WyC7.png">
-<meta property="og:image" content="https://s2.loli.net/2022/07/27/2aKgqkeuyVUQfF9.png">
-<meta property="og:image" content="https://s2.loli.net/2022/07/27/38p1LMxH5j9dVkB.png">
-<meta property="article:published_time" content="2022-07-19T13:10:54.000Z">
-<meta property="article:modified_time" content="2022-07-27T14:36:01.744Z">
+<meta property="article:published_time" content="2022-10-15T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-10-16T09:53:43.013Z">
 <meta property="article:author" content="Will Hou">
-<meta property="article:tag" content="数学">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="算法基础">
+<meta property="article:tag" content="深搜">
+<meta property="article:tag" content="思维题">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://s2.loli.net/2022/07/27/2aKgqkeuyVUQfF9.png">
 
-<link rel="canonical" href="http://willhou936.github.io/2022/07/19/topic-math_ring_dyeing/">
+<link rel="canonical" href="http://willhou936.github.io/2022/10/16/solution-acc73/">
 
 
 <script id="page-configurations">
@@ -53,7 +49,7 @@
   };
 </script>
 
-  <title>【专题】环形染色问题 | WillHou's Blog</title>
+  <title>【题解】AcWing 第73场周赛题解 | WillHou's Blog</title>
   
 
 
@@ -207,7 +203,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://willhou936.github.io/2022/07/19/topic-math_ring_dyeing/">
+    <link itemprop="mainEntityOfPage" href="http://willhou936.github.io/2022/10/16/solution-acc73/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://s2.loli.net/2022/08/06/GA6lI42o5CqRfaP.png">
@@ -220,7 +216,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          【专题】环形染色问题
+          【题解】AcWing 第73场周赛题解
         </h1>
 
         <div class="post-meta">
@@ -231,7 +227,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2022-07-19 21:10:54" itemprop="dateCreated datePublished" datetime="2022-07-19T21:10:54+08:00">2022-07-19</time>
+              <time title="创建时间：2022-10-16 00:00:00" itemprop="dateCreated datePublished" datetime="2022-10-16T00:00:00+08:00">2022-10-16</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -239,7 +235,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E4%B8%93%E9%A2%98/" itemprop="url" rel="index"><span itemprop="name">专题</span></a>
+                  <a href="/categories/%E9%A2%98%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">题解</span></a>
                 </span>
             </span>
 
@@ -259,13 +255,13 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2022/07/19/topic-math_ring_dyeing/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/07/19/topic-math_ring_dyeing/" itemprop="commentCount"></span>
+    <a title="valine" href="/2022/10/16/solution-acc73/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/10/16/solution-acc73/" itemprop="commentCount"></span>
     </a>
   </span>
   
   
-            <div class="post-description">环形染色问题详解</div>
+            <div class="post-description">AcWing 第73场周赛题解</div>
         </div>
       </header>
 
@@ -275,71 +271,31 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p><strong>本文转载自 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/507310484">知乎</a></strong>，本文在原文的基础上做出了如下改进：</p>
-<ul>
-<li>重绘了所有插图，设计更加清新、间接、明了；</li>
-<li>将知乎所有公式图片换成 $\LaTeX$。</li>
-</ul>
-<hr>
-<p>如图所示，一个圆环被分成 $m(m\geq2)$ 块，用 $n(n\geq2)$ 种不同颜色给每一块染色，要求相邻两块的颜色不相同。此类问题称之为环形染色问题。</p>
-<p><img src="https://s2.loli.net/2022/07/27/2aKgqkeuyVUQfF9.png" alt=""></p>
-<p>环形染色问题可以分为两种，一类是圆环中心区域要染色，一类是圆环中心区域不染色。因为中心区域染色问题在给中心涂色之后，剩余部分即为中心区域不染色的问题，所以本文重点讲解中心区域不染色问题。</p>
-<p>本文先针对 $m=4$、$m=5$ 以分类与分步的做法解决，而后给出此类问题的通解。</p>
-<h3 id="中心区域不染色"><a href="#中心区域不染色" class="headerlink" title="中心区域不染色"></a>中心区域不染色</h3><p><strong>$m=4, n=4$ 的情况</strong></p>
-<p>如图，环形区域被分成 $4$ 块，用 $4$ 种不同的颜色给这 $4$ 块区域染色，要求相邻区域颜色不同。</p>
-<p><img src="https://s2.loli.net/2022/07/27/5UeAbSRVoIFZ8zK.png" alt=""></p>
-<p>解：</p>
-<p>我们先给四块区域标注为 $A, B, C, D$。先给 $A$ 染色，则有 $4$ 种颜色，而后 $B$ 有三种，$C$ 也是有三种，但是 $D$ 则需要分类来讨论。因为 $D$ 与 $A, C$ 都相邻，且 $A,C$ 都已经涂好颜色，则 $A,C$ 若同色，则 $D$ 有三种颜色可选，$A,C$ 不同色，则 $D$ 只有两种颜色可以选择，如下图所示：</p>
-<p><img src="https://s2.loli.net/2022/07/27/ksDpK52GSEUfgry.png" alt=""></p>
-<p>则共有 $4\times 3\times (1\times 3+2\times 2)=84$ 种染色方式。</p>
-<p><strong>$m=5, n=4$ 的情况</strong></p>
-<p>如图，环形区域被分成 $5$ 块，用 $4$ 种不同的颜色给这 $5$ 块区域染色，要求相邻区域颜色不同。</p>
-<p><img src="https://s2.loli.net/2022/07/27/vRtPzrEfoi2WyC7.png" alt=""></p>
-<p>解：</p>
-<p>同上，给五块区域标注为 $A, B, C, D, E$。依旧是按顺序给 $5$ 块区域染色。则在考虑 $A, D$ 同色问题时，需考虑到 $A, C$ 是否同色。若 $A, C$ 同色，则 $A,D$ 必定不同色。只有 $A,C$ 不同色，才有可能出现 $A,D$ 同色。</p>
-<p>因此有以下分类：</p>
-<ol>
-<li>$A, C$ 同色：则 $A,D$ 必定不同色，则五块区域一次有 $4,3,1,3,2$ 种选法，共有 $4\times 3\times 1\times 3\times 2 = 72$ 种染色方式；</li>
-<li>$A,C$ 不同色：<ol>
-<li>$A,D$ 同色：则五块区域依次有 $4, 3, 2, 1, 3$ 种选法，共有 $4\times 3\times 1\times 3\times 2 = 72$ 种染色方式；</li>
-<li>$A,D$ 异色：则五块区域依次有 $4, 3, 2, 2, 2$ 种选法，共有 $4\times 3\times 2\times 2\times 2 = 96$ 种染色方式；</li>
-</ol>
-</li>
-</ol>
-<p>共计有 $72+72+96=240$ 种染色方式。</p>
-<p><strong>任意 $m\geq 2,n\geq 2$ 的情况</strong></p>
-<p>记当有 $m$ 块区域时，染色方法有 $a_m$ 种；则当 $m$ 取 $1,2,3,\dots$ 时，分别有 $a_1,a_2,a_3,\dots$ 种染色方式。</p>
-<p><img src="https://s2.loli.net/2022/07/27/2aKgqkeuyVUQfF9.png" alt=""></p>
-<p>首先考虑直线型染色：如下图所示，有 $m$ 块区域，$n$ 种颜色，要求相邻区域不同色。</p>
-<p><img src="https://s2.loli.net/2022/07/27/38p1LMxH5j9dVkB.png" alt=""></p>
-<p>则除了第一块有 $n$ 种涂法，其余各块都是 $n-1$ 种。则共有 $n(n-1)^{m-1}$ 种染色方式。</p>
-<p>现在把直线型的两端对接，拼成一个环形。</p>
-<p>当两端颜色相同时，首尾对接则会出现有两块相邻区域颜色相同。其余相邻区域颜色则均不同。此时若把相邻颜色相同的区域合并为一个区域，则此时的环形有 $m-1$ 块区域，任意相邻区域颜色均不相同，对应 $a_{m-1}$ 种染色方式。</p>
-<p>当两端颜色不同时，首尾对接，则任意相邻区域颜色均不相同，此时的环形有 $m$ 块区域，对应 $a_m$ 种染色方式。</p>
-<p>因此有 $a_m+a_{m-1}=n(n-1)^{m-1}$</p>
-<p>对其稍作变形，有：<br>$$<br>\begin{aligned}<br>a_m+a_{m-1} &amp;= (n-1)(n-1)^{m-1}+(n-1)^{m-1}\<br>            &amp;= (n-1)^m+(n-1)^{m-1}\<br>\end{aligned}<br>$$<br>移向可得：<br>$$<br>a_m-(n-1)^m=-(a_{m-1}-(n-1)^{m-1})<br>$$<br>分类讨论如下：</p>
-<ol>
-<li><p>$a_m-(n-1)^m = 0$</p>
-<p>即 $a_m=(n-1)^m$，考虑 $a_2=n(n-1)$，与之矛盾，舍；</p>
-</li>
-<li><p>$a_m-(n-1)^m \ne 0$</p>
-<p>令 $b_m=a_m-(n-1)^m$，则有 $\frac{b_m}{b_{m-1}} = -1$，为等比数列</p>
-<p>则 $b_m=(-1)^{m-2}\times b_2=(-1)^m\times b_2$</p>
-<p>代入 $b_2=a_2-(n-1)^2=n(n-1)-(n-1)^2=n-1$</p>
-<p>有 $b_m=(-1)^m\times b_2=(-1)^m\times (n-1)$</p>
-<p>代入 $b_m=a_m-(n-1)^m$</p>
-<p>有 $a_m=(n-1)^m+(-1)^m\times (n-1)$</p>
-</li>
-</ol>
-<p>验证一下：</p>
-<ol>
-<li>代入 $m=4, n=4$，有 $3^4+3=84$</li>
-<li>代入 $m=5, n=4$，有 $3^5-3=240$</li>
-</ol>
-<h3 id="中心区域染色"><a href="#中心区域染色" class="headerlink" title="中心区域染色"></a>中心区域染色</h3><p>圆环有 $m$ 块区域，再加上中心区域共有 $m+1$ 块区域，有 $n+1$ 种颜色</p>
-<p>由于中心区域与外环所有区域均相邻，则先涂中心区域，有 $n+1$ 种涂色方法；</p>
-<p>此时余下 $m$ 块区域与 $n$ 种颜色，即为中心不染色时 $m$ 块区域和 $n$ 种颜色的环形染色问题，代入上述公式，共有 $a_m=(n-1)^m+(-1)^m\times(n-1)$ 种染色方法。</p>
-<p>合计共有 $(n+1)\times a_m=(n+1)\times [(n-1)^m+(-1)^m\times(n-1)]$ 种染色方法。</p>
+        <h4 id="a.-数对">A. 数对</h4>
+<p>题目链接：<a
+target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/4707/">AcWing 4704.
+数对</a></p>
+<p>没啥好说的，题目意思都给你写在脸上了。直接暴力 <span
+class="math inline">\(\mathcal{O}(N^2)\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">1009</span>;</span><br><span class="line"><span class="type">int</span> n, d, ans, a[N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d%d&quot;</span>, &amp;n, &amp;d);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, a + i);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">1</span>; j &lt;= n; j++)</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">abs</span>(a[i] - a[j]) &lt;= d)</span><br><span class="line">                ans++;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, ans - n);</span><br><span class="line">    <span class="comment">// 最后 -n 是因为要除去 i==j 的情况</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="b.-矩阵">B. 矩阵</h4>
+<p>题目链接：<a
+target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/4708/">AcWing 4705.
+矩阵</a></p>
+<p>旋转之后，顺时针遍历矩阵的最小字典序的排列是不变的。</p>
+<p>所以只需要顺时针遍历这个矩阵，然后将其最小字典序的排列加入一个
+<code>set</code> 容器中自动去重，最后输出这个容器的大小即可。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;set&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> n;</span><br><span class="line">string s, t;</span><br><span class="line">set&lt;string&gt; SET;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    cin &gt;&gt; n;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (i != <span class="number">1</span>) cin &gt;&gt; s;</span><br><span class="line">        cin &gt;&gt; s &gt;&gt; t;</span><br><span class="line">        <span class="built_in">reverse</span>(t.<span class="built_in">begin</span>(), t.<span class="built_in">end</span>());</span><br><span class="line">        s += t;</span><br><span class="line">        string temp = s;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">4</span>; i++) &#123;</span><br><span class="line">            <span class="built_in">rotate</span>(temp.<span class="built_in">begin</span>(), temp.<span class="built_in">begin</span>() + <span class="number">1</span>, temp.<span class="built_in">end</span>());</span><br><span class="line">            s = <span class="built_in">min</span>(s, temp);</span><br><span class="line">        &#125;</span><br><span class="line">        SET.<span class="built_in">insert</span>(s);</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; SET.<span class="built_in">size</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="c.-最短路程">C. 最短路程</h4>
+<p>题目链接：<a
+target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/4709/">AcWing 4706.
+最短路程</a></p>
+<p>一眼思维题，模拟几组样例即可发现规律。</p>
+<p>通过模拟一些树，即可发现：除了起点到终点的这些边走了一次，其他的边都被走了两次。所以，想要最终的路径长度最小，只需要保证
+<span class="math inline">\(1\)</span> 号点到终点路径最长即可。直接
+<span class="math inline">\(\texttt{dfs}\)</span> 求解，时间复杂度 <span
+class="math inline">\(\mathcal{O}(N)\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> LL = <span class="type">long</span> <span class="type">long</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">1e5</span> + <span class="number">9</span>;</span><br><span class="line"><span class="type">int</span> n, hd[N];</span><br><span class="line">LL ans;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Edge</span> &#123;</span><br><span class="line">    <span class="type">int</span> to, nx, wt;</span><br><span class="line">&#125; eg[N &lt;&lt; <span class="number">1</span>];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">addE</span><span class="params">(<span class="type">int</span> u, <span class="type">int</span> v, <span class="type">int</span> w, <span class="type">int</span> c)</span> </span>&#123;</span><br><span class="line">    eg[c] = &#123;v, hd[u], w&#125;, hd[u] = c;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> u, <span class="type">int</span> fa)</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> res = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = hd[u]; i; i = eg[i].nx) &#123;</span><br><span class="line">        <span class="type">int</span> v = eg[i].to;</span><br><span class="line">        <span class="keyword">if</span> (v == fa) <span class="keyword">continue</span>;</span><br><span class="line">        res = std::<span class="built_in">max</span>(res, <span class="built_in">dfs</span>(v, u) + eg[i].wt);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;n);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>, x, y, w; i &lt; n; i++) &#123;</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%d%d%d&quot;</span>, &amp;x, &amp;y, &amp;w);</span><br><span class="line">        <span class="built_in">addE</span>(x, y, w, i &lt;&lt; <span class="number">1</span>);</span><br><span class="line">        <span class="built_in">addE</span>(y, x, w, i &lt;&lt; <span class="number">1</span> | <span class="number">1</span>);</span><br><span class="line">        ans += w * <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%lld\n&quot;</span>, ans - <span class="built_in">dfs</span>(<span class="number">1</span>, <span class="number">0</span>));</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -355,7 +311,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://willhou936.github.io/2022/07/19/topic-math_ring_dyeing/" title="【专题】环形染色问题">http://willhou936.github.io/2022/07/19/topic-math_ring_dyeing/</a>
+    <a href="http://willhou936.github.io/2022/10/16/solution-acc73/" title="【题解】AcWing 第73场周赛题解">http://willhou936.github.io/2022/10/16/solution-acc73/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -367,7 +323,10 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag"><i class="fa fa-tag"></i> 数学</a>
+              <a href="/tags/C/" rel="tag"><i class="fa fa-tag"></i> C++</a>
+              <a href="/tags/%E7%AE%97%E6%B3%95%E5%9F%BA%E7%A1%80/" rel="tag"><i class="fa fa-tag"></i> 算法基础</a>
+              <a href="/tags/%E6%B7%B1%E6%90%9C/" rel="tag"><i class="fa fa-tag"></i> 深搜</a>
+              <a href="/tags/%E6%80%9D%E7%BB%B4%E9%A2%98/" rel="tag"><i class="fa fa-tag"></i> 思维题</a>
           </div>
 
         
@@ -376,13 +335,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2022/07/13/topic-basicalg/" rel="prev" title="【专题】那些被忽略的细节">
-      <i class="fa fa-chevron-left"></i> 【专题】那些被忽略的细节
+    <a href="/2022/10/10/solution-acc72/" rel="prev" title="【题解】AcWing 第72场周赛题解">
+      <i class="fa fa-chevron-left"></i> 【题解】AcWing 第72场周赛题解
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2022/07/21/solution-huge_knapsack/" rel="next" title="【题解】巨大 01 背包问题">
-      【题解】巨大 01 背包问题 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -442,7 +398,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AD%E5%BF%83%E5%8C%BA%E5%9F%9F%E4%B8%8D%E6%9F%93%E8%89%B2"><span class="nav-number">1.</span> <span class="nav-text">中心区域不染色</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AD%E5%BF%83%E5%8C%BA%E5%9F%9F%E6%9F%93%E8%89%B2"><span class="nav-number">2.</span> <span class="nav-text">中心区域染色</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#a.-%E6%95%B0%E5%AF%B9"><span class="nav-number">1.</span> <span class="nav-text">A. 数对</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#b.-%E7%9F%A9%E9%98%B5"><span class="nav-number">2.</span> <span class="nav-text">B. 矩阵</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#c.-%E6%9C%80%E7%9F%AD%E8%B7%AF%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">C. 最短路程</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
